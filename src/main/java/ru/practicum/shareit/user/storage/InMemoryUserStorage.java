@@ -8,10 +8,11 @@ import ru.practicum.shareit.user.model.User;
 import java.util.*;
 
 @Repository
-public class InMemoryUserStorage implements UserStorage{
+public class InMemoryUserStorage implements UserStorage {
 
-    public static final String USER_NOT_FOUND = "Пользователь с id не найден : ";
-    public static final String EMAIL_ERROR = "Пользователь с email уже существует :";
+    private final String USER_NOT_FOUND = "Пользователь с id не найден :";
+    private final String EMAIL_ERROR = "Пользователь с email уже существует :";
+
     private final Map<Long, User> users = new HashMap<>();
     private final Set<String> emails = new HashSet<>();
     private long currentId = 1;
@@ -29,31 +30,38 @@ public class InMemoryUserStorage implements UserStorage{
     public User updateUser(long userId, User user) {
         if (!users.containsKey(userId)) {
             throw new UserNotFoundException(USER_NOT_FOUND + userId);
+        } else {
+            User oldUser = users.get(userId);
+            if (user.getName() != null) {
+                oldUser.setName(user.getName());
+            }
+            String oldEmail = users.get(userId).getEmail();
+            String newEmail = user.getEmail();
+            if (newEmail != null && !oldEmail.equals(newEmail)) {
+                tryRefreshUserEmail(oldEmail, newEmail);
+                oldUser.setEmail(newEmail);
+            }
+            return oldUser;
         }
-        User oldUser = users.get(userId);
-        if (user.getName() != null) {
-            oldUser.setName(user.getName());
-        }
-        String oldEmail = users.get(userId).getEmail();
-        String newEmail = user.getEmail();
-        if (newEmail != null && !oldEmail.equals(newEmail)) {
-            tryRefreshUserEmail(oldEmail, newEmail);
-            oldUser.setEmail(newEmail);
-        }
-        return oldUser;
     }
 
     @Override
     public User getUserById(long userId) {
-        if (!users.containsKey(userId)) throw new UserNotFoundException(USER_NOT_FOUND + userId);
-        return users.get(userId);
+        if (!users.containsKey(userId)) {
+            throw new UserNotFoundException(USER_NOT_FOUND + userId);
+        } else {
+            return users.get(userId);
+        }
     }
 
     @Override
     public void deleteUserById(long userId) {
-        if (!users.containsKey(userId)) throw new UserNotFoundException(USER_NOT_FOUND + userId);
-        emails.remove(users.get(userId).getEmail());
-        users.remove(userId);
+        if (!users.containsKey(userId)) {
+            throw new UserNotFoundException(USER_NOT_FOUND + userId);
+        } else {
+            emails.remove(users.get(userId).getEmail());
+            users.remove(userId);
+        }
     }
 
     @Override
@@ -62,7 +70,9 @@ public class InMemoryUserStorage implements UserStorage{
     }
 
     private void checkEmailIsAlreadyUsed(String email) {
-        if (emails.contains(email)) throw new EmailException(EMAIL_ERROR + email);
+        if (emails.contains(email)) {
+            throw new EmailException(EMAIL_ERROR + email);
+        }
     }
 
     private void tryRefreshUserEmail(String oldEmail, String newEmail) {
@@ -70,8 +80,9 @@ public class InMemoryUserStorage implements UserStorage{
         if (emails.contains(newEmail)) {
             emails.add(oldEmail);
             throw new EmailException(EMAIL_ERROR + newEmail);
+        } else {
+            emails.add(newEmail);
         }
-        emails.add(newEmail);
     }
 
     private long generateId() {
