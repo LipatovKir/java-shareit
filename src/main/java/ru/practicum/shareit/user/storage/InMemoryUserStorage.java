@@ -10,8 +10,8 @@ import java.util.*;
 @Repository
 public class InMemoryUserStorage implements UserStorage {
 
-    private final String USER_NOT_FOUND = "Пользователь с id не найден :";
-    private final String EMAIL_ERROR = "Пользователь с email уже существует :";
+    private static final String USER_NOT_FOUND = "Пользователь с id не найден :";
+    private static final String EMAIL_ERROR = "Пользователь с email уже существует :";
 
     private final Map<Long, User> users = new HashMap<>();
     private final Set<String> emails = new HashSet<>();
