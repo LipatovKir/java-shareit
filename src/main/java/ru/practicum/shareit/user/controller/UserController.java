@@ -14,6 +14,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+@Validated
 @RestController
 @AllArgsConstructor
 @RequestMapping(path = "/users")

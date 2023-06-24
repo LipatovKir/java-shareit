@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.item.exception.OwnerNotFoundException;
 import ru.practicum.shareit.item.model.Item;
@@ -16,17 +17,17 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
-    public static final String OWNER_NOT_FOUND = "Не найден владелец c id: ";
+    private static final String OWNER_NOT_FOUND = "Не найден владелец c id: ";
     private final ItemStorage itemStorage;
     private final UserStorage userStorage;
 
     @Override
     public Item createItem(Item item) {
         boolean ownerExists = isOwnerExists(item.getOwner());
-        if (!ownerExists) {
-            throw new OwnerNotFoundException(OWNER_NOT_FOUND + item.getOwner());
+        if (ownerExists) {
+            itemStorage.createItem(item);
         }
-        return itemStorage.createItem(item);
+        return item;
     }
 
     @Override
@@ -46,7 +47,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<Item> getItemsByRequest(String text) {
-        if (text == null || text.isBlank()) {
+        if (StringUtils.isBlank(text)) {
             return new ArrayList<>();
         }
         return itemStorage.getItemsByRequest(text);
@@ -54,7 +55,12 @@ public class ItemServiceImpl implements ItemService {
 
     private boolean isOwnerExists(long ownerId) {
         List<User> users = userStorage.getAllUsers();
-        List<User> result = users.stream().filter(user -> user.getId() == ownerId).collect(Collectors.toList());
-        return !result.isEmpty();
+        List<User> result = users.stream()
+                .filter(user -> user.getId() == ownerId)
+                .collect(Collectors.toList());
+        if (result.isEmpty()) {
+            throw new OwnerNotFoundException(OWNER_NOT_FOUND + ownerId);
+        }
+        return true;
     }
 }

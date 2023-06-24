@@ -1,14 +1,13 @@
 package ru.practicum.shareit.item.storage;
 
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
 import ru.practicum.shareit.item.exception.NotOwnerException;
 import ru.practicum.shareit.item.model.Item;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class InMemoryItemStorage implements ItemStorage {
@@ -67,8 +66,8 @@ public class InMemoryItemStorage implements ItemStorage {
                 items.values()) {
             String itemName = item.getName().toLowerCase();
             String itemDescription = item.getDescription().toLowerCase();
-            if ((itemName.contains(searchItem) || itemDescription.contains(searchItem))
-                    && item.getAvailable().equals(true)) {
+            if (StringUtils.containsOnly(searchItem, itemName) || StringUtils.containsOnly(searchItem, itemDescription)
+                    && BooleanUtils.isTrue(item.getAvailable())) {
                 result.add(item);
             }
         }
@@ -80,17 +79,8 @@ public class InMemoryItemStorage implements ItemStorage {
     }
 
     private void changeItem(Item oldItem, Item newItem) {
-        String name = newItem.getName();
-        if (name != null) {
-            oldItem.setName(name);
-        }
-        String description = newItem.getDescription();
-        if (description != null) {
-            oldItem.setDescription(description);
-        }
-        Boolean available = newItem.getAvailable();
-        if (available != null) {
-            oldItem.setAvailable(available);
-        }
+        Optional.ofNullable(newItem.getName()).ifPresent(oldItem::setName);
+        Optional.ofNullable(newItem.getDescription()).ifPresent(oldItem::setDescription);
+        Optional.ofNullable(newItem.getAvailable()).ifPresent(oldItem::setAvailable);
     }
 }

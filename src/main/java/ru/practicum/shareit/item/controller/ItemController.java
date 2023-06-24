@@ -13,8 +13,10 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/items")
+
 public class ItemController {
 
     public static final int VALID_ID = 1;

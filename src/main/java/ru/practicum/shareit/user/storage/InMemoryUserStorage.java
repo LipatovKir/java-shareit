@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user.storage;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.user.exception.EmailException;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
@@ -30,19 +31,18 @@ public class InMemoryUserStorage implements UserStorage {
     public User updateUser(long userId, User user) {
         if (!users.containsKey(userId)) {
             throw new UserNotFoundException(USER_NOT_FOUND + userId);
-        } else {
-            User oldUser = users.get(userId);
-            if (user.getName() != null) {
-                oldUser.setName(user.getName());
-            }
-            String oldEmail = users.get(userId).getEmail();
-            String newEmail = user.getEmail();
-            if (newEmail != null && !oldEmail.equals(newEmail)) {
-                tryRefreshUserEmail(oldEmail, newEmail);
-                oldUser.setEmail(newEmail);
-            }
-            return oldUser;
         }
+        User oldUser = users.get(userId);
+        if (user.getName() != null) {
+            oldUser.setName(user.getName());
+        }
+        String oldEmail = users.get(userId).getEmail();
+        String newEmail = user.getEmail();
+        if (StringUtils.isNotBlank(newEmail) && !StringUtils.contains(oldEmail, newEmail)) {
+            tryRefreshUserEmail(oldEmail, newEmail);
+            oldUser.setEmail(newEmail);
+        }
+        return oldUser;
     }
 
     @Override
@@ -58,10 +58,9 @@ public class InMemoryUserStorage implements UserStorage {
     public void deleteUserById(long userId) {
         if (!users.containsKey(userId)) {
             throw new UserNotFoundException(USER_NOT_FOUND + userId);
-        } else {
-            emails.remove(users.get(userId).getEmail());
-            users.remove(userId);
         }
+        emails.remove(users.get(userId).getEmail());
+        users.remove(userId);
     }
 
     @Override
