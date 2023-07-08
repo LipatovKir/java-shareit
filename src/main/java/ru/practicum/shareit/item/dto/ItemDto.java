@@ -2,15 +2,19 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.practicum.shareit.booking.dto.BookingInItemDto;
 import ru.practicum.shareit.validation_label.Create;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class ItemDto {
 
@@ -21,4 +25,11 @@ public class ItemDto {
     private String description;
     @NotNull(groups = Create.class)
     private Boolean available;
+    @NotNull
+    private Long owner;
+    private BookingInItemDto lastBooking;
+    private BookingInItemDto nextBooking;
+    private List<DetailedCommentDto> comments;
 }
+
+

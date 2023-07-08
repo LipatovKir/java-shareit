@@ -1,34 +1,48 @@
 package ru.practicum.shareit.item.service;
 
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.service.BookingMapper;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Service
 public class ItemMapper {
 
-    public ItemDto makeDto(Item item) {
-        return new ItemDto(item.getId(), item.getName(), item.getDescription(), item.getAvailable());
+    public static ItemDto toDto(Item item, List<Comment> comments) {
+        ItemDto dto = new ItemDto();
+        dto.setId(item.getId());
+        dto.setName(item.getName());
+        dto.setDescription(item.getDescription());
+        dto.setAvailable(item.getAvailable());
+        if (comments != null) {
+            dto.setComments(CommentMapper.toCommentDetailedDtoList(comments));
+        }
+        return dto;
     }
 
-    public Item makeModel(ItemDto itemDto, Long ownerId) {
+    public static ItemDto toDto(Item item,
+                                Booking lastBooking,
+                                Booking nextBooking,
+                                List<Comment> comments) {
+        ItemDto dto = new ItemDto();
+        dto.setId(item.getId());
+        dto.setName(item.getName());
+        dto.setDescription(item.getDescription());
+        dto.setAvailable(item.getAvailable());
+        dto.setLastBooking(BookingMapper.bookingInItemDto(lastBooking));
+        dto.setNextBooking(BookingMapper.bookingInItemDto(nextBooking));
+        if (comments != null) {
+            dto.setComments(CommentMapper.toCommentDetailedDtoList(comments));
+        }
+        return dto;
+    }
+
+    public static Item toModel(ItemDto itemDto, Long ownerId) {
         return new Item(null, itemDto.getName(), itemDto.getDescription(), itemDto.getAvailable(), ownerId);
     }
 
-    public List<ItemDto> makeItemListToItemDtoList(List<Item> userItems) {
-        if (userItems.isEmpty()) {
-            return new ArrayList<>();
-        }
 
-        List<ItemDto> result = new ArrayList<>();
-        for (Item item : userItems) {
-            ItemDto itemDto = makeDto(item);
-            result.add(itemDto);
-        }
-        return result;
-    }
 }
-

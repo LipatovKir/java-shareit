@@ -7,18 +7,17 @@ import ru.practicum.shareit.user.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
 public class UserMapper {
 
-    public UserDto makeDto(User user) {
+    public static UserDto makeDto(User user) {
         return new UserDto(user.getId(), user.getName(), user.getEmail());
     }
 
-    public User makeModel(UserDto userDto, Long userId) {
+    public static User makeModel(UserDto userDto, Long userId) {
         return new User(userId, userDto.getName(), userDto.getEmail());
     }
 
-    public List<UserDto> makeUserListToUserDtoList(List<User> users) {
+    public static List<UserDto> makeUserListToUserDtoList(List<User> users) {
         List<UserDto> result = new ArrayList<>();
         for (User user : users) {
             result.add(makeDto(user));

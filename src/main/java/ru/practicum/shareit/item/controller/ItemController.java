@@ -1,10 +1,11 @@
 package ru.practicum.shareit.item.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CreateCommentDto;
+import ru.practicum.shareit.item.dto.DetailedCommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.service.ItemMapper;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.validation_label.Create;
 import ru.practicum.shareit.validation_label.Update;
@@ -13,67 +14,68 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Validated
 @RestController
-@RequestMapping("/items")
-
+@AllArgsConstructor
+@RequestMapping(path = "/items")
 public class ItemController {
 
-    public static final int VALID_ID = 1;
-    public static final String ERROR_ITEM_ID = "ID вещи не может быть NULL ";
-    public static final String ERROR_USER_ID = "ID пользователя не может быть NULL ";
-    public static final String X_SHARER_USER = "X-Sharer-User-Id";
+    public static final int MIN_ID_VALUE = 1;
+    public static final String USER_ID_HEADER = "X-Sharer-User-Id";
+    public static final String NULL_ITEM_ID_MESSAGE = "itemID is null";
+    public static final String NULL_USER_ID_MESSAGE = "userID is null";
 
     private final ItemService itemService;
-    private final ItemMapper mapper;
-
-    public ItemController(ItemService itemService, ItemMapper mapper) {
-        this.itemService = itemService;
-        this.mapper = mapper;
-    }
 
     @PostMapping
     public ItemDto createItem(@Validated({Create.class})
                               @RequestBody ItemDto itemDto,
-                              @NotNull(message = (ERROR_ITEM_ID))
-                              @Min(VALID_ID)
-                              @RequestHeader(X_SHARER_USER) Long userId) {
-        Item item = mapper.makeModel(itemDto, userId);
-        return mapper.makeDto(itemService.createItem(item));
+                              @NotNull(message = (NULL_ITEM_ID_MESSAGE))
+                              @Min(MIN_ID_VALUE)
+                              @RequestHeader(USER_ID_HEADER) Long userId) {
+        return itemService.createItem(itemDto, userId);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public DetailedCommentDto createComment(@Validated({Update.class}) @RequestBody CreateCommentDto commentDto,
+                                            @NotNull(message = (NULL_ITEM_ID_MESSAGE))
+                                            @Min(MIN_ID_VALUE)
+                                            @PathVariable Long itemId,
+                                            @NotNull(message = (NULL_USER_ID_MESSAGE))
+                                            @Min(MIN_ID_VALUE)
+                                            @RequestHeader(USER_ID_HEADER) Long userId) {
+        return itemService.createComment(commentDto, itemId, userId);
     }
 
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@Validated({Update.class})
                               @RequestBody ItemDto itemDto,
-                              @NotNull(message = ERROR_ITEM_ID)
-                              @Min(VALID_ID)
+                              @NotNull(message = NULL_ITEM_ID_MESSAGE)
+                              @Min(MIN_ID_VALUE)
                               @PathVariable Long itemId,
-                              @NotNull(message = ERROR_USER_ID)
-                              @Min(VALID_ID)
-                              @RequestHeader(X_SHARER_USER) Long userId) {
-        Item item = mapper.makeModel(itemDto, userId);
-        item.setId(itemId);
-        return mapper.makeDto(itemService.updateItem(item));
+                              @NotNull(message = NULL_USER_ID_MESSAGE)
+                              @Min(MIN_ID_VALUE)
+                              @RequestHeader(USER_ID_HEADER) Long userId) {
+        return itemService.updateItem(itemDto, itemId, userId);
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto findItemById(@NotNull(message = ERROR_ITEM_ID)
-                                @Min(VALID_ID)
-                                @PathVariable Long itemId) {
-        return mapper.makeDto(itemService.getItemById(itemId));
+    public ItemDto findItemById(@NotNull(message = NULL_ITEM_ID_MESSAGE)
+                                @Min(MIN_ID_VALUE)
+                                @PathVariable Long itemId,
+                                @RequestHeader(USER_ID_HEADER) Long userId) {
+        return itemService.findItemById(itemId, userId);
     }
 
     @GetMapping
-    public List<ItemDto> findAllItems(@NotNull(message = ERROR_USER_ID)
-                                      @Min(VALID_ID)
-                                      @RequestHeader(X_SHARER_USER) Long userId) {
-        List<Item> userItems = itemService.getAllItems(userId);
-        return mapper.makeItemListToItemDtoList(userItems);
+    public List<ItemDto> findAllItems(@NotNull(message = NULL_USER_ID_MESSAGE)
+                                      @Min(MIN_ID_VALUE)
+                                      @RequestHeader(USER_ID_HEADER) Long userId) {
+        return itemService.findAllItems(userId);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> findItemsByRequest(@RequestParam String text) {
-        List<Item> foundItems = itemService.getItemsByRequest(text);
-        return mapper.makeItemListToItemDtoList(foundItems);
+    public List<ItemDto> findItemsByRequest(@RequestParam String text,
+                                            @RequestHeader(USER_ID_HEADER) Long userId) {
+        return itemService.findItemsByRequest(text, userId);
     }
 }
