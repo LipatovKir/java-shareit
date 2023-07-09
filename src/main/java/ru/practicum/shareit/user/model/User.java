@@ -1,44 +1,52 @@
 package ru.practicum.shareit.user.model;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.item.model.Item;
 
 import javax.persistence.*;
-import java.util.Objects;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity(name = "users")
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
+@Table(
+        name = "users",
+        schema = "public",
+        uniqueConstraints =
+        @UniqueConstraint(columnNames = {"email"})
+)
 public class User {
-    public static final int MAX_EMAIL_LENGTH = 512;
-    public static final String NAME_COLUMN_NAME = "name";
-    public static final String ID_COLUMN_NAME = "user_id";
-    public static final String EMAIL_COLUMN_NAME = "email";
-
     @Id
-    @Column(name = ID_COLUMN_NAME)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(name = NAME_COLUMN_NAME, nullable = false)
-    private String name;
-    @Column(name = EMAIL_COLUMN_NAME, nullable = false, length = MAX_EMAIL_LENGTH)
-    private String email;
+    @Column(name = "user_id")
+    Long id;
+    String name;
+    @Email(message = "Невалидная почта")
+    @NotBlank(message = "Почта не может быть пустой")
+    String email;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id != null
-                && Objects.equals(id, user.id)
-                && Objects.equals(name, user.name)
-                && Objects.equals(email, user.email);
+    @OneToMany(mappedBy = "booker")
+    List<Booking> bookings;
+
+    @OneToMany(mappedBy = "owner")
+    List<Item> items;
+
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, email);
+    public User(Long id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+    }
+
+    public User() {
     }
 }
-

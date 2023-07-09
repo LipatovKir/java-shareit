@@ -1,51 +1,45 @@
 package ru.practicum.shareit.request.model;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
-@Setter
-@Getter
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
+@Table(name = "requests", schema = "public")
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "requests")
 public class ItemRequest {
-    public static final int MAX_DESCRIPTION_LENGTH = 512;
-    public static final String ID_COLUMN_NAME = "request_id";
-    public static final String DESCRIPTION_COLUMN_NAME = "description";
-    public static final String REQUESTOR_COLUMN_NAME = "requestor";
-    public static final String CREATED_COLUMN_NAME = "created";
-
     @Id
-    @Column(name = ID_COLUMN_NAME)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(name = DESCRIPTION_COLUMN_NAME, nullable = false, length = MAX_DESCRIPTION_LENGTH)
-    private String description;
-    @Column(name = REQUESTOR_COLUMN_NAME, nullable = false)
-    private Long requestor;
-    @Column(name = CREATED_COLUMN_NAME, nullable = false)
-    private LocalDateTime created;
+    @Column(name = "request_id")
+    Long id;
+    //текст запроса, содержащий описание требуемой вещи
+    @NotBlank
+    String description;
+    //пользователь, создавший запрос
+    @ManyToOne(fetch = FetchType.EAGER)
+  //  @JoinColumn(name = "user_id")
+    User requester;
+    LocalDateTime created;
+    @OneToMany(mappedBy = "itemRequest")
+    List<Item> items = new ArrayList<>();
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ItemRequest request = (ItemRequest) o;
-        return id != null
-                && Objects.equals(id, request.id)
-                && Objects.equals(description, request.description)
-                && Objects.equals(requestor, request.requestor)
-                && Objects.equals(created, request.created);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, description, requestor, created);
+    public ItemRequest(String description, User requester, LocalDateTime created, List<Item> items) {
+        this.description = description;
+        this.requester = requester;
+        this.created = created;
+        this.items = items;
     }
 }

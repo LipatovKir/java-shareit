@@ -1,64 +1,63 @@
 package ru.practicum.shareit.booking.model;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
+import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.enums.Status;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
+@Table(name = "bookings", schema = "public")
 @AllArgsConstructor
-@Entity(name = "bookings")
 public class Booking {
-
-    public static final String ITEM_ID_COLUMN = "item_id";
-    public static final String END_TIME_COLUMN = "end_time";
-    public static final String ID_COLUMN = "booking_id";
-    public static final String BOOKER_ID_COLUMN = "booker_id";
-    public static final String STATUS_COLUMN_NAME = "status";
-    public static final String START_COLUMN_NAME = "start_time";
-
     @Id
-    @Column(name = ID_COLUMN)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(name = START_COLUMN_NAME, nullable = false)
-    private LocalDateTime start;
-    @Column(name = END_TIME_COLUMN, nullable = false)
-    private LocalDateTime end;
-    @ManyToOne
-    @JoinColumn(name = ITEM_ID_COLUMN)
-    private Item item;
-    @ManyToOne
-    @JoinColumn(name = BOOKER_ID_COLUMN)
-    private User booker;
-    @Column(name = STATUS_COLUMN_NAME, nullable = false)
+    @Column(name = "booking_id")
+    Long id;
+    @Column(name = "start_time")
+    LocalDateTime start;
+    //дата и время конца бронирования
+    @Column(name = "end_time")
+    LocalDateTime end;
+    //вещь, которую пользователь бронирует
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "item_id")
+    Item item;
+    //пользователь, который осуществляет бронирование
+    @ManyToOne(fetch = FetchType.EAGER)
+   // @JoinColumn(name = "user_id")
+    User booker;
+    //статус бронирования
     @Enumerated(EnumType.STRING)
-    private BookingStatus status;
+    Status status;
+    @ManyToMany
+    List<User> users = new ArrayList<>();
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Booking booking = (Booking) o;
-        return id != null
-                && Objects.equals(id, booking.id)
-                && Objects.equals(start, booking.start)
-                && Objects.equals(end, booking.end)
-                && Objects.equals(item, booking.item)
-                && Objects.equals(booker, booking.booker)
-                && status == booking.status;
+    public Booking(LocalDateTime start, LocalDateTime end, Item item, User booker) {
+        this.start = start;
+        this.end = end;
+        this.item = item;
+        this.booker = booker;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, start, end, item, booker, status);
+    public Booking(LocalDateTime start, LocalDateTime end, Item item, User booker, Status status, List<User> users) {
+        this.start = start;
+        this.end = end;
+        this.item = item;
+        this.booker = booker;
+        this.status = status;
+        this.users = users;
+    }
+
+    public Booking() {
     }
 }

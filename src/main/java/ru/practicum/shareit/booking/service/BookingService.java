@@ -1,20 +1,27 @@
 package ru.practicum.shareit.booking.service;
 
-import ru.practicum.shareit.booking.dto.BookingDetailedDto;
-import ru.practicum.shareit.booking.dto.BookingPostDto;
-import ru.practicum.shareit.booking.model.Booking;
+import org.springframework.data.domain.PageRequest;
+import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.BookingSmallDto;
+import ru.practicum.shareit.enums.StatusDto;
+import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 
 public interface BookingService {
+    BookingDto addNewBooking(UserDto userDto, Item item, BookingDto bookingDto);
 
-    Booking createBooking(BookingPostDto dto, Long userId);
+    BookingDto patch(Long bookingId, Long userId, Boolean approved);
 
-    Booking patchBooking(Long bookingId, Boolean approved, Long userId);
+    BookingDto getBookingById(Long bookingId, Long userId);
 
-    BookingDetailedDto findById(Long bookingId, Long userId);
+    List<BookingDto> getBookingsByUserAndState(User user, StatusDto statusDto, PageRequest pageRequest);
 
-    List<BookingDetailedDto> findAllByBooker(String state, Long userId);
+    List<BookingDto> getBookingsByOwnerAndState(User user, StatusDto statusDto, PageRequest pageRequest);
 
-    List<BookingDetailedDto> findAllByItemOwner(String state, Long userId);
+    List<BookingSmallDto> getBookingsByItem(Long itemId);
+
+    List<BookingSmallDto> getBookingsByOwner(UserDto userDto);
 }

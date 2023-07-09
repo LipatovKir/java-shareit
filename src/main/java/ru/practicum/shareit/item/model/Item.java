@@ -1,52 +1,66 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.*;
+import jdk.jfr.BooleanFlag;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
-import java.util.Objects;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity(name = "items")
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
+@Table(name = "items", schema = "public")
 public class Item {
-
-    public static final int MAX_DESCRIPTION_LENGTH = 512;
-    public static final String NAME_COLUMN = "name";
-    public static final String ID_COLUMN = "item_id";
-    public static final String OWNER_COLUMN = "owner";
-    public static final String AVAILABLE_COLUMN = "available";
-    public static final String DESCRIPTION_COLUMN = "description";
-
     @Id
-    @Column(name = ID_COLUMN)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(name = NAME_COLUMN, nullable = false)
-    private String name;
-    @Column(name = DESCRIPTION_COLUMN, nullable = false, length = MAX_DESCRIPTION_LENGTH)
-    private String description;
-    @Column(name = AVAILABLE_COLUMN, nullable = false)
-    private Boolean available;
-    @Column(name = OWNER_COLUMN, nullable = false)
-    private Long owner;
+    @Column(name = "item_id")
+    Long id;
+    @NotBlank(message = "Имя не может быть пустым")
+    String name;
+    @NotEmpty(message = "Описание не может быть пустым")
+    String description;
+    //статус о том, доступна или нет вещь для аренды
+    @BooleanFlag()
+    @NotNull
+    Boolean available;
+    //владелец вещи
+    @ManyToOne(fetch = FetchType.EAGER)
+ //   @JoinColumn(name = "user_id")
+    User owner;
+    //если вещь была создана по запросу другого пользователя, то в этом поле будет храниться ссылка на соответствующий запрос
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "REQUEST_ID")
+    ItemRequest itemRequest;
+    @OneToMany()
+    @JoinColumn(name = "item_id")
+    List<Booking> bookings;
+    @OneToMany()
+    @JoinColumn(name = "item_id")
+    List<Comment> comments;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Item item = (Item) o;
-        return id != null
-                && Objects.equals(id, item.id)
-                && Objects.equals(name, item.name)
-                && Objects.equals(description, item.description)
-                && Objects.equals(available, item.available)
-                && Objects.equals(owner, item.owner);
+    public Item(Long id, String name, String description, Boolean available, User owner) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.available = available;
+        this.owner = owner;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, description, available, owner);
+    public Item(String name, String description, Boolean available, User owner) {
+        this.name = name;
+        this.description = description;
+        this.available = available;
+        this.owner = owner;
+    }
+
+    public Item() {
     }
 }
