@@ -20,7 +20,7 @@ import java.util.List;
 @Table(name = "items", schema = "public")
 public class Item {
 
-    public static final String ITEM_ID_COLUMN = "item_id";
+    public static final String ITEM_ID_COLUMN = "id";
     public static final String REQUEST_ID_COLUMN = "request_id";
     public static final String ITEM_NAME_COLUMN = "name";
     public static final String ITEM_DESCRIPTION_COLUMN = "description";
