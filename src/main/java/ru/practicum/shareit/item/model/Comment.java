@@ -14,9 +14,9 @@ import java.time.LocalDateTime;
 @Table(name = "comments", schema = "public")
 public class Comment {
 
-    public static final String COMMENT_ID_COLUMN = "comment_id";
+    public static final String COMMENT_ID_COLUMN = "id";
     public static final String ITEM_ID_COLUMN = "item_id";
-    public static final String AUTHOR_ID_COLUMN = "author_id";
+    public static final String AUTHOR_ID_COLUMN = "author";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = COMMENT_ID_COLUMN)
