@@ -4,7 +4,6 @@ import ru.practicum.shareit.booking.dto.BookingShortDto;
 import ru.practicum.shareit.item.dto.CommentShortDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoForBooking;
-import ru.practicum.shareit.item.dto.ItemDtoForRequest;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.ArrayList;
@@ -66,23 +65,6 @@ public class ItemMapper {
                 itemDto.getDescription(),
                 itemDto.getAvailable(),
                 itemDto.getOwner()
-        );
-    }
-
-    public static ItemDtoForRequest requestDtoToItem(Item item) {
-        Long itemRequestId;
-        if (item.getItemRequest() != null) {
-            itemRequestId = item.getItemRequest().getId();
-        } else {
-            itemRequestId = null;
-        }
-        return new ItemDtoForRequest(
-                item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.getAvailable(),
-                itemRequestId,
-                item.getOwner().getId()
         );
     }
 }

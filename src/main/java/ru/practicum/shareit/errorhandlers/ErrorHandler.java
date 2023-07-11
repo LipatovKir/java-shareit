@@ -18,20 +18,12 @@ import ru.practicum.shareit.user.exception.UserNotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
-/*import ru.practicum.shareit.item.exception.NotOwnerException;
-import ru.practicum.shareit.item.exception.OwnerNotFoundException;
-import ru.practicum.shareit.user.exception.EmailException;
-import ru.practicum.shareit.user.exception.UserNotFoundException;*/
 
 @RestControllerAdvice
 public class ErrorHandler {
 
-  /*  @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handle(EmailException e) {
-        return new ErrorResponse("Код 409. Адрес почты уже используется.", e.getMessage());
-    }
-*/
+    private static final String ERROR_MESSAGE = "Код 400. Ошибка валидации.";
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handle(UserNotFoundException e) {
@@ -43,29 +35,23 @@ public class ErrorHandler {
     public ErrorResponse handle(OwnerNotFoundException e) {
         return new ErrorResponse("Код 404. Не найден владелец вещи.", e.getMessage());
     }
-/*
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse handle(NotOwnerException e) {
-        return new ErrorResponse("Код 403. Отказано в доступе.", e.getMessage());
-    }*/
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handle(MethodArgumentNotValidException e) {
-        return new ErrorResponse("Код 400. Ошибка валидации.", e.getMessage());
+        return new ErrorResponse(ERROR_MESSAGE, e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handle(ItemBadRequestException e) {
-        return new ErrorResponse("Код 400. Ошибка валидации.", e.getMessage());
+        return new ErrorResponse(ERROR_MESSAGE, e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handle(BookingTimeException e) {
-        return new ErrorResponse("Код 400. Ошибка валидации.", e.getMessage());
+        return new ErrorResponse(ERROR_MESSAGE, e.getMessage());
     }
 
     @ExceptionHandler
@@ -97,6 +83,6 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handle(CommentException e) {
-        return new ErrorResponse("Код 400. Ошибка валидации.", e.getMessage());
+        return new ErrorResponse(ERROR_MESSAGE, e.getMessage());
     }
 }
