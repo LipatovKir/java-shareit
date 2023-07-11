@@ -129,7 +129,7 @@ public class ItemServiceImpl implements ItemService {
             return new ArrayList<>();
         } else {
             return itemRepository
-                    .search(text)
+                    .search(StringUtils.lowerCase(text))
                     .stream()
                     .map(ItemMapper::toItemDto)
                     .collect(Collectors.toList());
