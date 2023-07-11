@@ -1,6 +1,6 @@
 package ru.practicum.shareit.test;
 
-/*import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,4 +45,4 @@ class UserRepoTest {
     void deleteUsers() {
         userRepository.deleteAll();
     }
-}*/
+}
