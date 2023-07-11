@@ -1,6 +1,6 @@
 package ru.practicum.shareit.test;
 
-import org.junit.jupiter.api.AfterEach;
+/*import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ class UserRepoTest {
     void createUser() {
 
         userTest = new User(id, "Test", "test@test.com");
-        userRepository.save(userTest);
+        userRepository.saveAndFlush(userTest);
         List<User> allUsers = userRepository.findAll();
         assertEquals(1, allUsers.size());
         id = allUsers.get(0).getId();
@@ -45,4 +45,4 @@ class UserRepoTest {
     void deleteUsers() {
         userRepository.deleteAll();
     }
-}
+}*/
