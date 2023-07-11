@@ -18,18 +18,11 @@ public class ItemMapper {
     }
 
     public static ItemDto toItemDto(Item item) {
-        Long itemRequestId;
-        if (item.getItemRequest() != null) {
-            itemRequestId = item.getItemRequest().getId();
-        } else {
-            itemRequestId = null;
-        }
         return new ItemDto(
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
-                item.getAvailable(),
-                itemRequestId
+                item.getAvailable()
         );
     }
 
