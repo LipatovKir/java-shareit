@@ -22,16 +22,22 @@ public class Item {
 
     public static final String ITEM_ID_COLUMN = "item_id";
     public static final String REQUEST_ID_COLUMN = "request_id";
+    public static final String ITEM_NAME_COLUMN = "name";
+    public static final String ITEM_DESCRIPTION_COLUMN = "description";
+    public static final String AVAILABLE_COLUMN = "available";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ITEM_ID_COLUMN)
     Long id;
     @NotBlank
+    @Column(name = ITEM_NAME_COLUMN)
     String name;
     @NotEmpty
+    @Column(name = ITEM_DESCRIPTION_COLUMN)
     String description;
     @BooleanFlag()
     @NotNull
+    @Column(name = AVAILABLE_COLUMN)
     Boolean available;
     @ManyToOne(fetch = FetchType.EAGER)
     User owner;
