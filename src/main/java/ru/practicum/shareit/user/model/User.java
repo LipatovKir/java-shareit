@@ -21,11 +21,19 @@ import java.util.List;
         @UniqueConstraint(columnNames = {"email"})
 )
 public class User {
+
+    public static final String ID_COLUMN = "id";
+    public static final String REQUEST_ID_COLUMN = "request_id";
+    public static final String NAME_COLUMN = "name";
+    public static final String EMAIL_COLUMN = "email";
+    public static final String AVAILABLE_COLUMN = "available";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = ID_COLUMN)
     Long id;
+    @Column(name = NAME_COLUMN)
     String name;
+    @Column(name = EMAIL_COLUMN)
     @Email
     @NotBlank
     String email;
