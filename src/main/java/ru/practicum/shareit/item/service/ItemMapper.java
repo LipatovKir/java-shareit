@@ -1,6 +1,10 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.item.service;
 
-import ru.practicum.shareit.booking.dto.BookingSmallDto;
+import ru.practicum.shareit.booking.dto.BookingShortDto;
+import ru.practicum.shareit.item.dto.CommentShortDto;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoForBooking;
+import ru.practicum.shareit.item.dto.ItemDtoForRequest;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.ArrayList;
@@ -9,6 +13,11 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ItemMapper {
+
+    ItemMapper() {
+        throw new UnsupportedOperationException();
+    }
+
     public static ItemDto toItemDto(Item item) {
         Long itemRequestId;
         if (item.getItemRequest() != null) {
@@ -25,7 +34,7 @@ public class ItemMapper {
         );
     }
 
-    public static ItemDtoForBooking toItemDtoForBooking(Item item, List<BookingSmallDto> bookings, List<CommentResponseDto> commentResponseList) {
+    public static ItemDtoForBooking toItemDtoForBooking(Item item, List<BookingShortDto> bookings, List<CommentShortDto> commentResponseList) {
         ItemDtoForBooking itemDtoForBooking = new ItemDtoForBooking(
                 item.getId(),
                 item.getName(),
@@ -33,11 +42,11 @@ public class ItemMapper {
                 item.getAvailable()
         );
         if ((bookings != null) && (bookings.size() >= 2)) {
-            List<BookingSmallDto> bookingsOneItem = bookings.stream()
+            List<BookingShortDto> bookingsOneItem = bookings.stream()
                     .filter(bookingSmallDto -> Objects.equals(bookingSmallDto.getItemId(), item.getId()))
                     .collect(Collectors.toList());
 
-            if ((bookingsOneItem != null) && (bookingsOneItem.size() >= 2)) {
+            if (bookingsOneItem.size() >= 2) {
                 itemDtoForBooking.setLastBooking(bookings.get(0));
                 itemDtoForBooking.setNextBooking(bookings.get(1));
             }
@@ -45,7 +54,7 @@ public class ItemMapper {
         if ((commentResponseList != null) && (commentResponseList.size() != 0)) {
             itemDtoForBooking.setComments(commentResponseList);
         } else {
-            itemDtoForBooking.setComments(new ArrayList<CommentResponseDto>());
+            itemDtoForBooking.setComments(new ArrayList<>());
         }
         return itemDtoForBooking;
     }

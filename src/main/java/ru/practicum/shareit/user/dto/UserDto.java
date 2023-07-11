@@ -16,15 +16,14 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 public class UserDto {
+
     Long id;
     String name;
-    @Email(message = "Невалидная почта")
-    @NotBlank(message = "Почта не может быть пустой")
+    @Email
+    @NotBlank
     String email;
-
     @OneToMany(mappedBy = "booker")
     List<Booking> bookings;
-
     @OneToMany(mappedBy = "owner")
     List<Item> items;
 

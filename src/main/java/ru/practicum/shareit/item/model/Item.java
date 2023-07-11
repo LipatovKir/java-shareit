@@ -19,31 +19,30 @@ import java.util.List;
 @Entity
 @Table(name = "items", schema = "public")
 public class Item {
+
+    public static final String ITEM_ID_COLUMN = "item_id";
+    public static final String REQUEST_ID_COLUMN = "request_id";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "item_id")
+    @Column(name = ITEM_ID_COLUMN)
     Long id;
-    @NotBlank(message = "Имя не может быть пустым")
+    @NotBlank
     String name;
-    @NotEmpty(message = "Описание не может быть пустым")
+    @NotEmpty
     String description;
-    //статус о том, доступна или нет вещь для аренды
     @BooleanFlag()
     @NotNull
     Boolean available;
-    //владелец вещи
     @ManyToOne(fetch = FetchType.EAGER)
- //   @JoinColumn(name = "user_id")
     User owner;
-    //если вещь была создана по запросу другого пользователя, то в этом поле будет храниться ссылка на соответствующий запрос
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "REQUEST_ID")
+    @JoinColumn(name = REQUEST_ID_COLUMN)
     ItemRequest itemRequest;
     @OneToMany()
-    @JoinColumn(name = "item_id")
+    @JoinColumn(name = ITEM_ID_COLUMN)
     List<Booking> bookings;
     @OneToMany()
-    @JoinColumn(name = "item_id")
+    @JoinColumn(name = ITEM_ID_COLUMN)
     List<Comment> comments;
 
     public Item(Long id, String name, String description, Boolean available, User owner) {

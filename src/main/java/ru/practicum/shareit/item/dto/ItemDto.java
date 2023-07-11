@@ -18,27 +18,18 @@ import javax.validation.constraints.NotNull;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDto {
     Long id;
-    @NotBlank(message = "Имя не может быть пустым")
+    @NotBlank
     String name;
-    @NotEmpty(message = "Описание не может быть пустым")
+    @NotEmpty
     String description;
-    //статус о том, доступна или нет вещь для аренды
     @BooleanFlag()
     @NotNull
     Boolean available;
-    //владелец вещи
     @Transient
     User owner;
     Long requestId;
     private Booking lastBooking;
     private Booking nextBooking;
-
-    public ItemDto(Long id, String name, String description, Boolean available) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.available = available;
-    }
 
     public ItemDto(Long id, String name, String description, Boolean available, Long requestId) {
         this.id = id;

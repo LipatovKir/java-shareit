@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Transient;
-import ru.practicum.shareit.booking.dto.BookingSmallDto;
+import ru.practicum.shareit.booking.dto.BookingShortDto;
 import ru.practicum.shareit.user.model.User;
 
 import javax.validation.constraints.NotBlank;
@@ -19,20 +19,18 @@ import java.util.List;
 @NoArgsConstructor
 public class ItemDtoForBooking {
     Long id;
-    @NotBlank(message = "Имя не может быть пустым")
+    @NotBlank
     String name;
-    @NotEmpty(message = "Описание не может быть пустым")
+    @NotEmpty
     String description;
-    //статус о том, доступна или нет вещь для аренды
     @BooleanFlag()
     @NotNull
     Boolean available;
-    //владелец вещи
     @Transient
     User owner;
-    private BookingSmallDto lastBooking;
-    private BookingSmallDto nextBooking;
-    List<CommentResponseDto> comments;
+    private BookingShortDto lastBooking;
+    private BookingShortDto nextBooking;
+    List<CommentShortDto> comments;
 
     public ItemDtoForBooking(Long id, String name, String description, Boolean available) {
         this.id = id;

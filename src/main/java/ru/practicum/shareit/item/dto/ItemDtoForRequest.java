@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDtoForRequest {
     Long id;
-    @NotBlank(message = "Имя не может быть пустым")
+    @NotBlank
     String name;
     String description;
     Boolean available;

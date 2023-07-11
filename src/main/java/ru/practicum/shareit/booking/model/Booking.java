@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.enums.Status;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -19,28 +18,32 @@ import java.util.List;
 @Table(name = "bookings", schema = "public")
 @AllArgsConstructor
 public class Booking {
+
+    public static final String BOOKING_ID_COLUMN = "booking_id";
+    public static final String START_TIME_COLUMN = "start_time";
+    public static final String END_TIME_COLUMN = "end_time";
+    public static final String ITEM_ID_COLUMN = "item_id";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "booking_id")
+    @Column(name = BOOKING_ID_COLUMN)
     Long id;
-    @Column(name = "start_time")
+    @Column(name = START_TIME_COLUMN)
     LocalDateTime start;
-    //дата и время конца бронирования
-    @Column(name = "end_time")
+    @Column(name = END_TIME_COLUMN)
     LocalDateTime end;
-    //вещь, которую пользователь бронирует
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "item_id")
+    @JoinColumn(name = ITEM_ID_COLUMN)
     Item item;
-    //пользователь, который осуществляет бронирование
     @ManyToOne(fetch = FetchType.EAGER)
-   // @JoinColumn(name = "user_id")
     User booker;
-    //статус бронирования
     @Enumerated(EnumType.STRING)
-    Status status;
+    BookingStatus status;
     @ManyToMany
     List<User> users = new ArrayList<>();
+
+    public Booking() {
+    }
 
     public Booking(LocalDateTime start, LocalDateTime end, Item item, User booker) {
         this.start = start;
@@ -49,15 +52,12 @@ public class Booking {
         this.booker = booker;
     }
 
-    public Booking(LocalDateTime start, LocalDateTime end, Item item, User booker, Status status, List<User> users) {
+    public Booking(LocalDateTime start, LocalDateTime end, Item item, User booker, BookingStatus status, List<User> users) {
         this.start = start;
         this.end = end;
         this.item = item;
         this.booker = booker;
         this.status = status;
         this.users = users;
-    }
-
-    public Booking() {
     }
 }

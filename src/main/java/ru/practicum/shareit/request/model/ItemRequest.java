@@ -25,21 +25,12 @@ public class ItemRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "request_id")
     Long id;
-    //текст запроса, содержащий описание требуемой вещи
     @NotBlank
     String description;
-    //пользователь, создавший запрос
     @ManyToOne(fetch = FetchType.EAGER)
-  //  @JoinColumn(name = "user_id")
     User requester;
     LocalDateTime created;
     @OneToMany(mappedBy = "itemRequest")
     List<Item> items = new ArrayList<>();
 
-    public ItemRequest(String description, User requester, LocalDateTime created, List<Item> items) {
-        this.description = description;
-        this.requester = requester;
-        this.created = created;
-        this.items = items;
-    }
 }

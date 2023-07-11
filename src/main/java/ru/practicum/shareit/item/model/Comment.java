@@ -13,14 +13,18 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "comments", schema = "public")
 public class Comment {
+
+    public static final String COMMENT_ID_COLUMN = "comment_id";
+    public static final String ITEM_ID_COLUMN = "item_id";
+    public static final String AUTHOR_ID_COLUMN = "author_id";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id")
+    @Column(name = COMMENT_ID_COLUMN)
     private Long id;
     private String text;
-    @Column(name = "item_id")
+    @Column(name = ITEM_ID_COLUMN)
     private Long itemId;
-    @Column(name = "author_id")
+    @Column(name = AUTHOR_ID_COLUMN)
     private Long authorId;
     private LocalDateTime created;
 }

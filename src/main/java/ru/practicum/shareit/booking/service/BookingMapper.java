@@ -1,33 +1,39 @@
-package ru.practicum.shareit.booking.dto;
+package ru.practicum.shareit.booking.service;
 
+import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.BookingShortDto;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.dto.UserMapper;
+import ru.practicum.shareit.item.service.ItemMapper;
+import ru.practicum.shareit.user.service.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
 public class BookingMapper {
 
-    public static BookingDto toBookingDto(Booking booking) {
+    BookingMapper() {
+        throw new UnsupportedOperationException();
+    }
+
+    public static BookingDto makeBookingDto(Booking booking) {
         return new BookingDto(
                 booking.getId(),
                 booking.getStart(),
                 booking.getEnd(),
                 booking.getStatus(),
-                UserMapper.toUserDto(booking.getBooker()),
+                UserMapper.makeUserDto(booking.getBooker()),
                 ItemMapper.toItemDto(booking.getItem())
         );
     }
 
-    public static BookingSmallDto toBookingSmallDto(Booking booking) {
-        return new BookingSmallDto(
+    public static BookingShortDto makeBookingShortDto(Booking booking) {
+        return new BookingShortDto(
                 booking.getId(),
                 booking.getBooker().getId(),
                 booking.getItem().getId()
         );
     }
 
-    public static Booking toBooking(BookingDto bookingDto, Item item, User user) {
+    public static Booking makeBooking(BookingDto bookingDto, Item item, User user) {
         return new Booking(
                 bookingDto.getStart(),
                 bookingDto.getEnd(),
