@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -88,6 +89,6 @@ public class ItemController {
                                 @RequestParam(value = "size", defaultValue = "10", required = false) Integer size,
                                 @PositiveOrZero
                                 @RequestParam(value = "from", defaultValue = "0", required = false) Integer from) {
-        return itemService.search(userId, text, PageRequest.of(from / size, size));
+        return itemService.search(userId, StringUtils.lowerCase(text), PageRequest.of(from / size, size));
     }
 }
