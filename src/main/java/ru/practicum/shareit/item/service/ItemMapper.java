@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.service;
 
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.booking.dto.BookingShortDto;
 import ru.practicum.shareit.item.dto.CommentShortDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -10,12 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
+@UtilityClass
 public class ItemMapper {
-
-    ItemMapper() {
-        throw new UnsupportedOperationException();
-    }
 
     public static ItemDto toItemDto(Item item) {
         return new ItemDto(
