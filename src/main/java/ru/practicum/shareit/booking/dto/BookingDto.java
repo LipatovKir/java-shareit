@@ -16,9 +16,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingDto {
-    @Transient
+
     Long id;
-    @Transient
     Long itemId;
     @NotNull
     LocalDateTime start;

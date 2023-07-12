@@ -1,8 +1,6 @@
 package ru.practicum.shareit.booking.model;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
@@ -15,11 +13,14 @@ import java.util.List;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "bookings", schema = "public")
+@Table(name = "bookings")
 @AllArgsConstructor
+@Builder
+@NoArgsConstructor
+
 public class Booking {
 
-    public static final String BOOKING_ID_COLUMN = "booking_id";
+    public static final String BOOKING_ID_COLUMN = "ids";
     public static final String START_TIME_COLUMN = "start_time";
     public static final String END_TIME_COLUMN = "end_time";
     public static final String ITEM_ID_COLUMN = "item_id";
@@ -44,8 +45,7 @@ public class Booking {
     @ManyToMany
     List<User> users = new ArrayList<>();
 
-    public Booking() {
-    }
+
 
     public Booking(LocalDateTime start, LocalDateTime end, Item item, User booker) {
         this.start = start;

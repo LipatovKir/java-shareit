@@ -13,6 +13,7 @@ import ru.practicum.shareit.user.model.User;
 @UtilityClass
 public class BookingMapper {
 
+
     public static BookingDto makeBookingDto(Booking booking) {
         return new BookingDto(
                 booking.getId(),
