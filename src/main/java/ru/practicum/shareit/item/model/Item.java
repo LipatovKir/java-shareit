@@ -24,7 +24,8 @@ public class Item {
     public static final String REQUEST_ID_COLUMN = "request_id";
     public static final String ITEM_NAME_COLUMN = "name";
     public static final String ITEM_DESCRIPTION_COLUMN = "description";
-    public static final String AVAILABLE_COLUMN = "available";
+    public static final String AVAILABLE_COLUMN = "is_available";
+    public static final String OWNER_COLUMN = "owner_id";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ITEM_ID_COLUMN)
@@ -40,6 +41,7 @@ public class Item {
     @Column(name = AVAILABLE_COLUMN)
     Boolean available;
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = OWNER_COLUMN)
     User owner;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = REQUEST_ID_COLUMN)
