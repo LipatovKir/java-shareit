@@ -11,7 +11,7 @@ import ru.practicum.shareit.user.model.User;
 public class BookingMapper {
 
     BookingMapper() {
-        throw new UnsupportedOperationException();
+
     }
 
     public static BookingDto makeBookingDto(Booking booking) {

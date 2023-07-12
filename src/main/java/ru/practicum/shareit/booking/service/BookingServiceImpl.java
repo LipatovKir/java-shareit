@@ -41,7 +41,7 @@ public class BookingServiceImpl implements BookingService {
         }
         Booking booking = BookingMapper.makeBooking(bookingDto, item, user);
         booking.setStatus(BookingStatus.WAITING);
-        bookingRepository.save(booking);
+        bookingRepository.saveAndFlush(booking);
         log.info("Пользователь: " + userDto.getId() + " создал бронирование.");
         return BookingMapper.makeBookingDto(booking);
     }

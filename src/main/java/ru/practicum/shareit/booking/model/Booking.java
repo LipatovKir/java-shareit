@@ -23,7 +23,8 @@ public class Booking {
     public static final String START_TIME_COLUMN = "start_time";
     public static final String END_TIME_COLUMN = "end_time";
     public static final String ITEM_ID_COLUMN = "item_id";
-
+    public static final String BOOKER_COLUMN = "booker_id";
+    public static final String STATUS_COLUMN = "status";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = BOOKING_ID_COLUMN)
@@ -38,6 +39,7 @@ public class Booking {
     @ManyToOne(fetch = FetchType.EAGER)
     User booker;
     @Enumerated(EnumType.STRING)
+    @Column(name = STATUS_COLUMN)
     BookingStatus status;
     @ManyToMany
     List<User> users = new ArrayList<>();

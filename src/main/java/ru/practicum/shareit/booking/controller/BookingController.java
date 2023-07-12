@@ -33,7 +33,7 @@ public class BookingController {
     private final ItemService itemService;
 
     @PostMapping
-    public BookingDto addBooking(@RequestHeader(X_SHARER_USER) Long userId,
+    public BookingDto createBooking(@RequestHeader(X_SHARER_USER) Long userId,
                                  @Valid
                                  @Validated({Create.class})
                                  @RequestBody BookingDto bookingDto) {
