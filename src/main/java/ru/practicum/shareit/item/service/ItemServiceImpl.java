@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingShortDto;
 import ru.practicum.shareit.booking.exception.BookingBadRequestException;
 import ru.practicum.shareit.booking.model.Booking;
@@ -33,6 +34,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
@@ -116,7 +118,7 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDtoForBooking> getItemsByUser(UserDto userDto, List<BookingShortDto> bookings, List<CommentShortDto> commentsResponseDto) {
         User user = UserMapper.makeDtoToUser(userDto);
         List<Item> itemsForOwner;
-        itemsForOwner = (List<Item>) itemRepository.findAllByOwnerId(user.getId());
+        itemsForOwner = itemRepository.findAllByOwnerId(user.getId());
         log.info("Найдены все вещи пользователя с id:" + user.getId());
         return itemsForOwner
                 .stream()

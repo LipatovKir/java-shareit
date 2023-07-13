@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "comments")
+@Table(name = "comments", schema = "public")
 public class Comment {
 
     public static final String COMMENT_ID_COLUMN = "id";
