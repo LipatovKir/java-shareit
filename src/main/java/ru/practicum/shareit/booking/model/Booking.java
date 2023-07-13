@@ -19,9 +19,9 @@ import java.util.List;
 @AllArgsConstructor
 public class Booking {
 
-    public static final String BOOKING_ID_COLUMN = "booking_id";
-    public static final String START_TIME_COLUMN = "start_time";
-    public static final String END_TIME_COLUMN = "end_time";
+    public static final String BOOKING_ID_COLUMN = "bookingId";
+    public static final String START_TIME_COLUMN = "start_date";
+    public static final String END_TIME_COLUMN = "end_date";
     public static final String ITEM_ID_COLUMN = "item_id";
     public static final String BOOKER_COLUMN = "booker_id";
     public static final String STATUS_COLUMN = "status";
