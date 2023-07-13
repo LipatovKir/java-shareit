@@ -1,39 +1,31 @@
 package ru.practicum.shareit.booking.dto;
 
-import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import org.springframework.data.annotation.Transient;
-import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.booking.Status;
 
+import javax.validation.constraints.Future;
+import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Data
-@NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class BookingDto {
-    @Transient
-    Long id;
-    @Transient
-    Long itemId;
-    @NotNull
-    LocalDateTime start;
-    @NotNull
-    LocalDateTime end;
-    BookingStatus status;
-    UserDto booker;
-    ItemDto item;
+/**
+ * TODO Sprint add-bookings.
+ */
 
-    public BookingDto(Long id, LocalDateTime start, LocalDateTime end, BookingStatus status, UserDto booker, ItemDto item) {
-        this.id = id;
-        this.start = start;
-        this.end = end;
-        this.status = status;
-        this.booker = booker;
-        this.item = item;
-    }
+@Data
+@Builder
+public class BookingDto {
+
+    private Long itemId;
+
+    @NotNull(message = "start cannot be empty.")
+    @FutureOrPresent(message = "start may be in the present or future")
+    private LocalDateTime start;
+
+    @NotNull(message = "end cannot be empty.")
+    @Future(message = "end may be in the future")
+    private LocalDateTime end;
+
+    private Status status;
 }

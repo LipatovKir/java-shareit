@@ -1,40 +1,37 @@
 package ru.practicum.shareit.item.dto;
 
-import jdk.jfr.BooleanFlag;
-import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import org.springframework.data.annotation.Transient;
-import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.booking.dto.BookingShortDto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+
+/**
+ * TODO Sprint add-controllers.
+ */
 
 @Data
-@NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 public class ItemDto {
-    Long id;
-    @NotBlank
-    String name;
-    @NotEmpty
-    String description;
-    @BooleanFlag()
-    @NotNull
-    Boolean available;
-    @Transient
-    User owner;
-    Long requestId;
-    private Booking lastBooking;
-    private Booking nextBooking;
 
-    public ItemDto(Long id, String name, String description, Boolean available) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.available = available;
-    }
+    private Long id;
+
+    @NotNull(message = "Name cannot be empty or contain spaces.")
+    @NotBlank(message = "Name cannot be empty or contain spaces.")
+    private String name;
+
+    @NotNull(message = "Description cannot be empty or contain spaces.")
+    @NotBlank(message = "Description cannot be empty or contain spaces.")
+    private String description;
+
+    @NotNull(message = "Available cannot be empty")
+    private Boolean available;
+
+    private BookingShortDto lastBooking;
+
+    private BookingShortDto nextBooking;
+
+    private List<CommentDto> comments;
 }
