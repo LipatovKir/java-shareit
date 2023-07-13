@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS bookings
     item_id    BIGINT REFERENCES items (id) ON DELETE CASCADE,
     booker_id  BIGINT REFERENCES users (id) ON DELETE CASCADE,
     status     VARCHAR(64)                             NOT NULL,
-    PRIMARY KEY (booker_id)
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS comments
