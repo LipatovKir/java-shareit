@@ -1,19 +1,15 @@
 package ru.practicum.shareit.booking.dto;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import org.springframework.data.annotation.Transient;
+
+import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 public class BookingShortDto {
-    @Transient
-    Long id;
-    Long bookerId;
-    long itemId;
+    private Long id;
+    private Long bookerId;
+    private LocalDateTime start;
+    private LocalDateTime end;
 }

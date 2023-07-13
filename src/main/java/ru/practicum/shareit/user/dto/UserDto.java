@@ -1,35 +1,28 @@
 package ru.practicum.shareit.user.dto;
 
-import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.item.model.Item;
 
-import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.util.List;
+import javax.validation.constraints.NotNull;
+
+/**
+ * TODO Sprint add-controllers.
+ */
 
 @Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@NoArgsConstructor
+@Builder
 public class UserDto {
 
-    Long id;
-    String name;
-    @Email
-    @NotBlank
-    String email;
-    @OneToMany(mappedBy = "booker")
-    List<Booking> bookings;
-    @OneToMany(mappedBy = "owner")
-    List<Item> items;
+    private Long id;
 
-    public UserDto(Long id, String name, String email) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-    }
+    @NotNull(message = "Login cannot be empty or contain spaces.")
+    @NotBlank(message = "Login cannot be empty or contain spaces.")
+    private String name;
+
+    @NotNull(message = "Email cannot be empty")
+    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Email must contain the character @")
+    private String email;
 }
