@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "bookings")
+@Table(name = "bookings",schema = "public")
 @AllArgsConstructor
 public class Booking {
 
@@ -53,14 +53,5 @@ public class Booking {
         this.end = end;
         this.item = item;
         this.booker = booker;
-    }
-
-    public Booking(LocalDateTime start, LocalDateTime end, Item item, User booker, BookingStatus status, List<User> users) {
-        this.start = start;
-        this.end = end;
-        this.item = item;
-        this.booker = booker;
-        this.status = status;
-        this.users = users;
     }
 }

@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "public")
 public class User {
 
     public static final String USER_ID_COLUMN = "user_id";
