@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.model.User;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @AllArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
