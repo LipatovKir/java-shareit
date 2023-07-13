@@ -3,41 +3,31 @@ package ru.practicum.shareit.user.model;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.item.model.Item;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.util.List;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(
-        name = "users",
-        schema = "public",
-        uniqueConstraints =
-        @UniqueConstraint(columnNames = {"email"})
-)
+@Table(name = "users")
 public class User {
 
     public static final String USER_ID_COLUMN = "user_id";
-    public static final String BOOKER = "booker";
-    public static final String OWNER = "owner";
+    public static final String NAME_COLUMN = "name";
+    public static final String EMAIL_COLUMN = "email";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = USER_ID_COLUMN)
     Long id;
+    @Column(name = NAME_COLUMN, nullable = false)
     String name;
     @Email
     @NotBlank
+    @Column(name = EMAIL_COLUMN, nullable = false, unique = true)
     String email;
-    @OneToMany(mappedBy = BOOKER)
-    List<Booking> bookings;
-    @OneToMany(mappedBy = OWNER)
-    List<Item> items;
 
     public User(String name, String email) {
         this.name = name;
