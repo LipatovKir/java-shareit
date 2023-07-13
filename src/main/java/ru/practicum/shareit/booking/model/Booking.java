@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "bookings", schema = "public")
+@Table(name = "bookings")
 @AllArgsConstructor
 public class Booking {
 

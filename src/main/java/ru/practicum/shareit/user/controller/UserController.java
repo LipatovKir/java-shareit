@@ -22,8 +22,8 @@ public class UserController {
 
     @PostMapping
     public UserDto createUser(@Valid
-                           @Validated({Create.class})
-                           @RequestBody UserDto userDto) {
+                              @Validated({Create.class})
+                              @RequestBody UserDto userDto) {
         User user = UserMapper.makeDtoToUser(userDto);
         return userService.createUser(user);
     }

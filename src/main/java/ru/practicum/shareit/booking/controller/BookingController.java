@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -17,8 +16,6 @@ import ru.practicum.shareit.validation_label.Create;
 import ru.practicum.shareit.validation_label.Update;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
@@ -34,11 +31,11 @@ public class BookingController {
 
     @PostMapping
     public BookingDto createBooking(@RequestHeader(X_SHARER_USER) Long userId,
-                                 @Valid
-                                 @Validated({Create.class})
-                                 @RequestBody BookingDto bookingDto) {
+                                    @Valid
+                                    @Validated({Create.class})
+                                    @RequestBody BookingDto bookingDto) {
         UserDto userDto = userService.findUserById(userId);
-        Item item = (Item) itemService.getItemByOwner(bookingDto.getItemId());
+        Item item = itemService.getItemByOwner(bookingDto.getItemId());
         itemService.checkItemsAvailability(bookingDto.getItemId());
         return bookingService.addBooking(userDto, item, bookingDto);
     }
@@ -60,22 +57,18 @@ public class BookingController {
     @GetMapping()
     public List<BookingDto> findBookingsByUser(
             @RequestHeader(X_SHARER_USER) Long userId,
-            @RequestParam(required = false, defaultValue = "ALL") State state,
-            @Positive @RequestParam(value = "size", defaultValue = "10", required = false) Integer size,
-            @PositiveOrZero @RequestParam(value = "from", defaultValue = "0", required = false) Integer from) {
+            @RequestParam(required = false, defaultValue = "ALL") State state) {
         UserDto userDto = userService.findUserById(userId);
         User user = UserMapper.makeDtoToUser(userDto);
-        return bookingService.getBookingsByUserAndState(user, state, PageRequest.of(from / size, size));
+        return bookingService.getBookingsByUserAndState(user, state);
     }
 
     @GetMapping("/owner")
     public List<BookingDto> findBookingsByOwner(
             @RequestHeader(X_SHARER_USER) Long userId,
-            @RequestParam(required = false, defaultValue = "ALL") State state,
-            @RequestParam(value = "size", defaultValue = "10", required = false) Integer size,
-            @RequestParam(value = "from", defaultValue = "0", required = false) Integer from) {
+            @RequestParam(required = false, defaultValue = "ALL") State state) {
         UserDto userDto = userService.findUserById(userId);
         User user = UserMapper.makeDtoToUser(userDto);
-        return bookingService.getBookingsByOwnerAndState(user, state, PageRequest.of(from, size));
+        return bookingService.getBookingsByOwnerAndState(user, state);
     }
 }

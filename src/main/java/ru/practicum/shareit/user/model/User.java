@@ -16,22 +16,26 @@ import java.util.List;
 @Entity
 @Table(
         name = "users",
-        schema = "public",
         uniqueConstraints =
         @UniqueConstraint(columnNames = {"email"})
 )
 public class User {
+
+    public static final String USER_ID_COLUMN = "user_id";
+    public static final String BOOKER = "booker";
+    public static final String OWNER = "owner";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = USER_ID_COLUMN)
     Long id;
     String name;
     @Email
     @NotBlank
     String email;
-    @OneToMany(mappedBy = "booker")
+    @OneToMany(mappedBy = BOOKER)
     List<Booking> bookings;
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = OWNER)
     List<Item> items;
 
     public User(String name, String email) {

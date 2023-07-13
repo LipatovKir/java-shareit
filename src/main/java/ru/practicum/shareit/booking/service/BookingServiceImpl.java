@@ -2,8 +2,6 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingShortDto;
@@ -59,7 +57,7 @@ public class BookingServiceImpl implements BookingService {
                 } else {
                     booking.get().setStatus(BookingStatus.REJECTED);
                 }
-                bookingRepository.save(booking.get());
+                bookingRepository.saveAndFlush(booking.get());
             } else {
                 throw new BookingException("Пользователь не является владельцем вещи.");
             }
@@ -85,32 +83,26 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getBookingsByUserAndState(User user, State statusDto, PageRequest pageRequest) {
+    public List<BookingDto> getBookingsByUserAndState(User user, State state) {
         List<Booking> bookings;
-        Page<Booking> bookingPage;
         LocalDateTime currentDate = LocalDateTime.now();
-        switch (statusDto) {
+        switch (state) {
             case ALL:
-                bookingPage = bookingRepository.findAllByBookerOrderByStartDesc(user, pageRequest);
-                bookings = bookingPage.getContent();
+                bookings = bookingRepository.findAllByBookerOrderByStartDesc(user);
                 return bookings.stream().map(BookingMapper::makeBookingDto).collect(Collectors.toList());
             case CURRENT:
-                bookingPage = bookingRepository.findAllByBookerAndStartBeforeAndEndAfterOrderByStartDesc(user, currentDate, currentDate, pageRequest);
-                bookings = bookingPage.getContent();
+                bookings = bookingRepository.findAllByBookerAndStartBeforeAndEndAfterOrderByStartDesc(user, currentDate, currentDate);
                 return bookings.stream().map(BookingMapper::makeBookingDto).collect(Collectors.toList());
             case PAST:
-                bookingPage = bookingRepository.findAllByBookerAndEndBeforeOrderByStartDesc(user, currentDate, pageRequest);
-                bookings = bookingPage.getContent();
+                bookings = bookingRepository.findAllByBookerAndEndBeforeOrderByStartDesc(user, currentDate);
                 return bookings.stream().map(BookingMapper::makeBookingDto).collect(Collectors.toList());
             case FUTURE:
-                bookingPage = bookingRepository.findAllByBookerAndStartAfterOrderByStartDesc(user, currentDate, pageRequest);
-                bookings = bookingPage.getContent();
+                bookings = bookingRepository.findAllByBookerAndStartAfterOrderByStartDesc(user, currentDate);
                 return bookings.stream().map(BookingMapper::makeBookingDto).collect(Collectors.toList());
             case WAITING:
             case REJECTED:
-                BookingStatus status = BookingStatus.valueOf(statusDto.toString());
-                bookingPage = bookingRepository.findAllByBookerAndStatusEquals(user, status, pageRequest);
-                bookings = bookingPage.getContent();
+                BookingStatus status = BookingStatus.valueOf(state.toString());
+                bookings = bookingRepository.findAllByBookerAndStatusEquals(user, status);
                 return bookings.stream().map(BookingMapper::makeBookingDto).collect(Collectors.toList());
             default:
                 throw new BookingStateException("Unknown state: UNSUPPORTED_STATUS");
@@ -118,31 +110,26 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getBookingsByOwnerAndState(User user, State state, PageRequest pageRequest) {
+    public List<BookingDto> getBookingsByOwnerAndState(User user, State state) {
         List<Booking> bookings;
-        Page<Booking> bookingPage;
+
         switch (state) {
             case ALL:
-                bookingPage = bookingRepository.getBookingsByOwnerId(user.getId(), pageRequest);
-                bookings = bookingPage.getContent();
+                bookings = bookingRepository.getBookingsByOwnerId(user.getId());
                 return bookings.stream().map(BookingMapper::makeBookingDto).collect(Collectors.toList());
             case CURRENT:
-                bookingPage = bookingRepository.getCurrentBookingByOwnerId(user.getId(), pageRequest);
-                bookings = bookingPage.getContent();
+                bookings = bookingRepository.getCurrentBookingByOwnerId(user.getId());
                 return bookings.stream().map(BookingMapper::makeBookingDto).collect(Collectors.toList());
             case PAST:
-                bookingPage = bookingRepository.getPastBookingByOwnerId(user.getId(), pageRequest);
-                bookings = bookingPage.getContent();
+                bookings = bookingRepository.getPastBookingByOwnerId(user.getId());
                 return bookings.stream().map(BookingMapper::makeBookingDto).collect(Collectors.toList());
             case FUTURE:
-                bookingPage = bookingRepository.getFutureBookingByOwnerId(user.getId(), pageRequest);
-                bookings = bookingPage.getContent();
+                bookings = bookingRepository.getFutureBookingByOwnerId(user.getId());
                 return bookings.stream().map(BookingMapper::makeBookingDto).collect(Collectors.toList());
             case WAITING:
             case REJECTED:
                 BookingStatus status = BookingStatus.valueOf(state.toString());
-                bookingPage = bookingRepository.getStateBookingByOwnerId(user.getId(), status, pageRequest);
-                bookings = bookingPage.getContent();
+                bookings = bookingRepository.getStateBookingByOwnerId(user.getId(), status);
                 return bookings.stream().map(BookingMapper::makeBookingDto).collect(Collectors.toList());
             default:
                 throw new BookingStateException("Unknown state: UNSUPPORTED_STATUS");

@@ -24,7 +24,7 @@ public class ItemMapper {
         );
     }
 
-    public static ItemDtoForBooking toItemDtoForBooking(Item item, List<BookingShortDto> bookings, List<CommentShortDto> commentResponseList) {
+    public static ItemDtoForBooking toItemDtoForBooking(Item item, List<BookingShortDto> bookings, List<CommentShortDto> commentShortDtoList) {
         ItemDtoForBooking itemDtoForBooking = new ItemDtoForBooking(
                 item.getId(),
                 item.getName(),
@@ -33,7 +33,7 @@ public class ItemMapper {
         );
         if ((bookings != null) && (bookings.size() >= 2)) {
             List<BookingShortDto> bookingsOneItem = bookings.stream()
-                    .filter(bookingSmallDto -> Objects.equals(bookingSmallDto.getItemId(), item.getId()))
+                    .filter(bookingShortDto -> Objects.equals(bookingShortDto.getItemId(), item.getId()))
                     .collect(Collectors.toList());
 
             if (bookingsOneItem.size() >= 2) {
@@ -41,8 +41,8 @@ public class ItemMapper {
                 itemDtoForBooking.setNextBooking(bookings.get(1));
             }
         }
-        if ((commentResponseList != null) && (commentResponseList.size() != 0)) {
-            itemDtoForBooking.setComments(commentResponseList);
+        if ((commentShortDtoList != null) && (commentShortDtoList.size() != 0)) {
+            itemDtoForBooking.setComments(commentShortDtoList);
         } else {
             itemDtoForBooking.setComments(new ArrayList<>());
         }

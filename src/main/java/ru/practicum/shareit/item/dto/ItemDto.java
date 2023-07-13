@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.annotation.Transient;
+
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.user.model.User;
 
@@ -25,11 +25,10 @@ public class ItemDto {
     @BooleanFlag()
     @NotNull
     Boolean available;
-    @Transient
     User owner;
     Long requestId;
-    private Booking lastBooking;
-    private Booking nextBooking;
+    Booking lastBooking;
+    Booking nextBooking;
 
     public ItemDto(Long id, String name, String description, Boolean available) {
         this.id = id;

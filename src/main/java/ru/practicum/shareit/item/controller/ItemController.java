@@ -1,8 +1,6 @@
 package ru.practicum.shareit.item.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingShortDto;
@@ -20,8 +18,6 @@ import ru.practicum.shareit.validation_label.Create;
 import ru.practicum.shareit.validation_label.Update;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Validated
@@ -34,7 +30,6 @@ public class ItemController {
     private final ItemService itemService;
     private final UserService userService;
     private final BookingService bookingService;
-
 
     @PostMapping
     public ItemDto createItem(@RequestHeader(X_SHARER_USER) Long userId,
@@ -62,8 +57,8 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDtoForBooking findItemById(@PathVariable("itemId") Long itemId,
-                                          @RequestHeader(X_SHARER_USER) Long userId) {
+    public ItemDtoForBooking getItemById(@PathVariable("itemId") Long itemId,
+                                         @RequestHeader(X_SHARER_USER) Long userId) {
         UserDto userDto = userService.findUserById(userId);
         User user = UserMapper.makeDtoToUser(userDto);
         List<CommentShortDto> commentsResponseDto;
@@ -72,23 +67,16 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDtoForBooking> findItemsByUser(@RequestHeader(X_SHARER_USER) Long userId,
-                                                   @Positive
-                                                   @RequestParam(value = "size", defaultValue = "10", required = false) Integer size,
-                                                   @PositiveOrZero
-                                                   @RequestParam(value = "from", defaultValue = "0", required = false) Integer from) {
+    public List<ItemDtoForBooking> findItemsByUser(@RequestHeader(X_SHARER_USER) Long userId) {
         UserDto userDto = userService.findUserById(userId);
         List<BookingShortDto> bookings = bookingService.getBookingsByOwner(userDto);
-        return itemService.getItemsByUser(userDto, bookings, PageRequest.of(from / size, size));
+        List<CommentShortDto> comments = itemService.getCommentList(userId);
+        return itemService.getItemsByUser(userDto, bookings, comments);
     }
 
     @GetMapping("/search")
     public List<ItemDto> search(@RequestHeader(X_SHARER_USER) Long userId,
-                                @RequestParam String text,
-                                @Positive
-                                @RequestParam(value = "size", defaultValue = "10", required = false) Integer size,
-                                @PositiveOrZero
-                                @RequestParam(value = "from", defaultValue = "0", required = false) Integer from) {
-        return itemService.search(userId, StringUtils.lowerCase(text), PageRequest.of(from / size, size));
+                                @RequestParam String text) {
+        return itemService.search(userId, text);
     }
 }

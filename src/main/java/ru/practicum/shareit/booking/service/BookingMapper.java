@@ -9,7 +9,6 @@ import ru.practicum.shareit.item.service.ItemMapper;
 import ru.practicum.shareit.user.service.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
-
 @UtilityClass
 public class BookingMapper {
 
