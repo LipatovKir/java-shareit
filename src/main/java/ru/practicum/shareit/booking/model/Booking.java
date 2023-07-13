@@ -37,6 +37,7 @@ public class Booking {
     @JoinColumn(name = ITEM_ID_COLUMN)
     Item item;
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = BOOKER_COLUMN)
     User booker;
     @Enumerated(EnumType.STRING)
     @Column(name = STATUS_COLUMN)

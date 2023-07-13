@@ -116,7 +116,7 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDtoForBooking> getItemsByUser(UserDto userDto, List<BookingShortDto> bookings, List<CommentShortDto> commentsResponseDto) {
         User user = UserMapper.makeDtoToUser(userDto);
         List<Item> itemsForOwner;
-        itemsForOwner = (List<Item>) itemRepository.findAllByOwnerId(user.getId());
+        itemsForOwner = itemRepository.findAllByOwnerId(user.getId());
         log.info("Найдены все вещи пользователя с id:" + user.getId());
         return itemsForOwner
                 .stream()
