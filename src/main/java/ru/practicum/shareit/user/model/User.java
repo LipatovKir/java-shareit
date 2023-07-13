@@ -16,6 +16,7 @@ import java.util.List;
 @Entity
 @Table(
         name = "users",
+        schema = "public",
         uniqueConstraints =
         @UniqueConstraint(columnNames = {"email"})
 )
