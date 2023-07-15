@@ -3,9 +3,9 @@ package ru.practicum.shareit.user;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.exception.EmailExistException;
+import ru.practicum.shareit.exceptions.EmailExistException;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.util.UnionService;
+import ru.practicum.shareit.checkservice.CheckService;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UnionService unionService;
+    private final CheckService unionService;
 
     @Transactional
     @Override

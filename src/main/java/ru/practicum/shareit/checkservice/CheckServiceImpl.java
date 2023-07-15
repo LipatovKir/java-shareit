@@ -1,18 +1,18 @@
-package ru.practicum.shareit.util;
+package ru.practicum.shareit.checkservice;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.booking.Booking;
-import ru.practicum.shareit.booking.BookingRepository;
-import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.booking.exception.BookingNotFoundException;
+import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemRepository;
-import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
+import ru.practicum.shareit.user.exception.UserNotFoundException;
 
 @Service
 @RequiredArgsConstructor
-public class UnionServiceImpl implements UnionService {
+public class CheckServiceImpl implements CheckService {
 
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
@@ -20,15 +20,13 @@ public class UnionServiceImpl implements UnionService {
 
     @Override
     public void checkUser(Long userId) {
-
         if (!userRepository.existsById(userId)) {
-            throw new NotFoundException(User.class, "User id " + userId + " not found.");
+            throw new UserNotFoundException("Пользователь не найден " + userId);
         }
     }
 
     @Override
     public void checkItem(Long itemId) {
-
         if (!itemRepository.existsById(itemId)) {
             throw new NotFoundException(Item.class, "Item id " + itemId + " not found.");
         }
@@ -36,9 +34,8 @@ public class UnionServiceImpl implements UnionService {
 
     @Override
     public void checkBooking(Long bookingId) {
-
         if (!bookingRepository.existsById(bookingId)) {
-            throw new NotFoundException(Booking.class, "Booking id " + bookingId + " not found.");
+            throw new BookingNotFoundException("Бронирование не найдено " + bookingId);
         }
     }
 }

@@ -10,7 +10,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import javax.validation.Valid;
 import java.util.List;
 
-import static ru.practicum.shareit.util.Constant.HEADER_USER;
+import static ru.practicum.shareit.checkservice.Constant.HEADER_USER;
 
 /**
  * TODO Sprint add-controllers.

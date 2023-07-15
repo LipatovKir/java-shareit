@@ -1,6 +1,6 @@
-package ru.practicum.shareit.util;
+package ru.practicum.shareit.checkservice;
 
-public interface UnionService {
+public interface CheckService {
 
     void checkUser(Long userId);
 
