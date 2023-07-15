@@ -6,21 +6,22 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.exception.BookingNotFoundException;
+import ru.practicum.shareit.booking.exception.ValidationException;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.model.State;
 import ru.practicum.shareit.booking.repository.BookingRepository;
-import ru.practicum.shareit.exceptions.NotFoundException;
-import ru.practicum.shareit.exceptions.UnsupportedStatusException;
-import ru.practicum.shareit.exceptions.ValidationException;
-import ru.practicum.shareit.item.Item;
-import ru.practicum.shareit.item.ItemRepository;
+import ru.practicum.shareit.booking.exception.UnsupportedStatusException;
+import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.exception.OwnerNotFoundException;
-import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.user.UserRepository;
+import ru.practicum.shareit.user.exception.UserNotFoundException;
+import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.checkservice.CheckService;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -41,7 +42,7 @@ public class BookingServiceImpl implements BookingService {
             Item item = itemRepository.findById(bookingDto.getItemId()).get();
             checkService.checkUser(userId);
             User user = userRepository.findById(userId).get();
-            Booking booking = BookingMapper.returnBooking(bookingDto);
+            Booking booking = BookingMapper.makeDtoInBooking(bookingDto);
             booking.setItem(item);
             booking.setBooker(user);
             if (item.getOwner().equals(user)) {
@@ -57,7 +58,7 @@ public class BookingServiceImpl implements BookingService {
                 throw new ValidationException("Начало бронирования не может совпадать с окончанием.");
             }
             bookingRepository.save(booking);
-            return BookingMapper.returnBookingDto(booking);
+            return BookingMapper.makeBookingDto(booking);
         } else {
             throw new BookingNotFoundException("Вещь или пользователь не найдены.");
         }
@@ -81,7 +82,7 @@ public class BookingServiceImpl implements BookingService {
                 booking.setStatus(BookingStatus.REJECTED);
             }
             bookingRepository.save(booking);
-            return BookingMapper.returnBookingDto(booking);
+            return BookingMapper.makeBookingDto(booking);
         } else {
             throw new BookingNotFoundException("Такая бронь не найдена");
         }
@@ -95,9 +96,9 @@ public class BookingServiceImpl implements BookingService {
             Booking booking = bookingRepository.findById(bookingId).get();
             checkService.checkUser(userId);
             if (booking.getBooker().getId() == userId || booking.getItem().getOwner().getId() == userId) {
-                return BookingMapper.returnBookingDto(booking);
+                return BookingMapper.makeBookingDto(booking);
             } else {
-                throw new NotFoundException(User.class, "To get information about the reservation, the car of the reservation or the owner {} " + userId + "of the item can");
+                throw new UserNotFoundException("Не удалось получить информацию по бронированию {} " + userId);
             }
         } else {
             throw new BookingNotFoundException("Такая бронь не найдена");
@@ -109,7 +110,7 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingResponseDto> getBookingByBooker(long userId, String state) {
         checkService.checkUser(userId);
         List<Booking> bookings;
-        State bookingState = State.valueOf(state);
+        State bookingState = validateState(state);
         switch (bookingState) {
             case ALL:
                 bookings = bookingRepository.findAllByBookerIdOrderByStartDesc(userId);
@@ -130,9 +131,9 @@ public class BookingServiceImpl implements BookingService {
                 bookings = bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.REJECTED);
                 break;
             default:
-                throw new UnsupportedStatusException("Unknown state: " + state);
+                bookings = Collections.emptyList();
         }
-        return BookingMapper.returnBookingDtoList(bookings);
+        return BookingMapper.makeBookingDtoList(bookings);
     }
 
     @Transactional(readOnly = true)
@@ -143,7 +144,7 @@ public class BookingServiceImpl implements BookingService {
             throw new ValidationException("У пользователя нет бронирований.");
         }
         List<Booking> bookings;
-        State bookingState = State.valueOf(state);
+        State bookingState = validateState(state);
         switch (bookingState) {
             case ALL:
                 bookings = bookingRepository.findAllByItemOwnerIdOrderByStartDesc(userId);
@@ -164,9 +165,17 @@ public class BookingServiceImpl implements BookingService {
                 bookings = bookingRepository.findAllByItemOwnerIdAndStatusOrderByStartDesc(userId, BookingStatus.REJECTED);
                 break;
             default:
-                throw new UnsupportedStatusException("Unknown state: " + state);
+                bookings = Collections.emptyList();
         }
-        return BookingMapper.returnBookingDtoList(bookings);
+        return BookingMapper.makeBookingDtoList(bookings);
+    }
+
+    private State validateState(String state) {
+        try {
+            return State.valueOf(state.toUpperCase());
+        } catch (RuntimeException e) {
+            throw new UnsupportedStatusException("Unknown state: " + state);
+        }
     }
 }
 

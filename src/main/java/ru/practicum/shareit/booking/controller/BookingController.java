@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
-import ru.practicum.shareit.validation_label.Create;
-import ru.practicum.shareit.validation_label.Update;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -25,7 +23,6 @@ public class BookingController {
 
     @PostMapping
     public BookingResponseDto createBooking(@RequestHeader(X_SHARER_USER) Long userId,
-                                            @Validated({Create.class})
                                             @RequestBody
                                             @Valid BookingDto bookingDto) {
         log.info("Пользователь создал новое бронирование");
@@ -34,7 +31,6 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public BookingResponseDto updateBooking(@RequestHeader(X_SHARER_USER) Long userId,
-                                            @Validated({Update.class})
                                             @PathVariable Long bookingId,
                                             @RequestParam Boolean approved) {
         log.info("Пользователь {} изменил статус бронирования {}", userId, bookingId);

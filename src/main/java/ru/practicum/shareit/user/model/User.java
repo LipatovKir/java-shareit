@@ -1,12 +1,10 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.model;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Data
 @Builder
 @AllArgsConstructor
@@ -14,17 +12,15 @@ import javax.persistence.*;
 @Entity
 @Table(name = "users", schema = "public")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private Long id;
-
+    Long id;
     @Column(name = "name", nullable = false)
-    private String name;
-
+    String name;
     @Column(name = "email", unique = true)
-    private String email;
-
+    String email;
 }

@@ -6,8 +6,8 @@ import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.dto.BookingShortDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.item.ItemMapper;
-import ru.practicum.shareit.user.UserMapper;
+import ru.practicum.shareit.item.service.ItemMapper;
+import ru.practicum.shareit.user.service.UserMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,18 +15,18 @@ import java.util.List;
 @UtilityClass
 public class BookingMapper {
 
-    public static BookingResponseDto returnBookingDto(Booking booking) {
+    public static BookingResponseDto makeBookingDto(Booking booking) {
         return BookingResponseDto.builder()
                 .id(booking.getId())
                 .start(booking.getStart())
                 .end(booking.getEnd())
                 .status(booking.getStatus())
-                .item(ItemMapper.returnItemDto(booking.getItem()))
-                .booker(UserMapper.returnUserDto(booking.getBooker()))
+                .item(ItemMapper.makeItemInDto(booking.getItem()))
+                .booker(UserMapper.makeUserInDto(booking.getBooker()))
                 .build();
     }
 
-    public static BookingShortDto returnBookingShortDto(Booking booking) {
+    public static BookingShortDto makeBookingShortDto(Booking booking) {
         return BookingShortDto.builder()
                 .id(booking.getId())
                 .start(booking.getStart())
@@ -35,7 +35,7 @@ public class BookingMapper {
                 .build();
     }
 
-    public static Booking returnBooking(BookingDto bookingDto) {
+    public static Booking makeDtoInBooking(BookingDto bookingDto) {
         Booking booking = Booking.builder()
                 .start(bookingDto.getStart())
                 .end(bookingDto.getEnd())
@@ -48,10 +48,10 @@ public class BookingMapper {
         return booking;
     }
 
-    public static List<BookingResponseDto> returnBookingDtoList(Iterable<Booking> bookings) {
+    public static List<BookingResponseDto> makeBookingDtoList(Iterable<Booking> bookings) {
         List<BookingResponseDto> result = new ArrayList<>();
         for (Booking booking : bookings) {
-            result.add(returnBookingDto(booking));
+            result.add(makeBookingDto(booking));
         }
         return result;
     }
