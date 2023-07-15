@@ -26,8 +26,8 @@ public class BookingController {
     @PostMapping
     public BookingResponseDto createBooking(@RequestHeader(X_SHARER_USER) Long userId,
                                             @Validated({Create.class})
-                                       @RequestBody
-                                       @Valid BookingDto bookingDto) {
+                                            @RequestBody
+                                            @Valid BookingDto bookingDto) {
         log.info("Пользователь создал новое бронирование");
         return bookingService.createBooking(bookingDto, userId);
     }
@@ -35,7 +35,7 @@ public class BookingController {
     @PatchMapping("/{bookingId}")
     public BookingResponseDto updateBooking(@RequestHeader(X_SHARER_USER) Long userId,
                                             @Validated({Update.class})
-                                       @PathVariable Long bookingId,
+                                            @PathVariable Long bookingId,
                                             @RequestParam Boolean approved) {
         log.info("Пользователь {} изменил статус бронирования {}", userId, bookingId);
         return bookingService.updateBooking(userId, bookingId, approved);

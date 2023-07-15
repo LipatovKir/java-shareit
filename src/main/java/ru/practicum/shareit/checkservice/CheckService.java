@@ -7,5 +7,4 @@ public interface CheckService {
     void checkItem(Long itemId);
 
     void checkBooking(Long booking);
-
 }
