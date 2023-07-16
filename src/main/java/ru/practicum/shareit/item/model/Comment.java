@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "comments", schema = "public")
+@Table(name = "comments")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Comment {
@@ -21,7 +21,7 @@ public class Comment {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     Long id;
-    @Column(name = "text", nullable = false)
+    @Column(name = "text", nullable = false, length = 1200)
     String text;
     @Column(name = "created", nullable = false)
     LocalDateTime created;

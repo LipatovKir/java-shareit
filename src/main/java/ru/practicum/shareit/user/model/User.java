@@ -10,7 +10,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "users", schema = "public")
+@Table(name = "users")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
@@ -19,8 +19,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     Long id;
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 250)
     String name;
-    @Column(name = "email", unique = true)
+    @Column(name = "email", unique = true, length = 512)
     String email;
 }

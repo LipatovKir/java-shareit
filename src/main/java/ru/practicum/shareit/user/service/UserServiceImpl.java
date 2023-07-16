@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -6,10 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.checkservice.CheckService;
 import ru.practicum.shareit.user.exception.EmailException;
+import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
-import ru.practicum.shareit.user.service.UserMapper;
-import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;
 
@@ -18,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    public static final String USER_NOT_FOUND = "Пользователь не найден";
     private final UserRepository userRepository;
     private final CheckService checkService;
 
@@ -32,11 +32,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserDto updateUser(UserDto userDto, long userId) {
+        checkService.checkUser(userId);
         User user = UserMapper.makeDtoInUser(userDto);
         user.setId(userId);
-        checkService.checkUser(userId);
-        if (userRepository.findById(userId).isPresent()) {
-            User newUser = userRepository.findById(userId).get();
+        return userRepository.findById(userId).map(newUser -> {
             if (user.getName() != null) {
                 newUser.setName(user.getName());
             }
@@ -49,8 +48,7 @@ public class UserServiceImpl implements UserService {
             }
             userRepository.save(newUser);
             return UserMapper.makeUserInDto(newUser);
-        }
-        return null;
+        }).orElse(null);
     }
 
     @Transactional
@@ -64,7 +62,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserById(long userId) {
         checkService.checkUser(userId);
-        return UserMapper.makeUserInDto(userRepository.findById(userId).get());
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND + userId));
+        return UserMapper.makeUserInDto(user);
     }
 
     @Transactional(readOnly = true)

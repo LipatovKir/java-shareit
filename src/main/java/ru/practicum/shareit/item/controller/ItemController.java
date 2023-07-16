@@ -33,7 +33,6 @@ public class ItemController {
     public ItemDto updateItem(@RequestHeader(X_SHARER_USER) Long userId,
                               @RequestBody ItemDto itemDto,
                               @PathVariable Long itemId) {
-
         log.info("Пользователь {} обновил вещь {}", userId, itemDto.getName());
         return itemService.updateItem(itemDto, itemId, userId);
     }
@@ -62,7 +61,6 @@ public class ItemController {
                                  @PathVariable Long itemId,
                                  @RequestBody
                                  @Valid CommentDto commentDto) {
-
         log.info("Пользователь {} добавил комментарий к вещи {}", userId, itemId);
         return itemService.createComment(userId, itemId, commentDto);
     }

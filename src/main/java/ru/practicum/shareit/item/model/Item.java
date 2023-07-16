@@ -11,7 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "items", schema = "public")
+@Table(name = "items")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Item {
@@ -20,9 +20,9 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     Long id;
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 250)
     String name;
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = false, length = 512)
     String description;
     @Column(name = "is_available")
     Boolean available;
