@@ -1,26 +1,26 @@
 package ru.practicum.shareit.user.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.persistence.*;
 
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "users")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
 
-    private Long id;
-    @NotNull
-    @NotBlank
-    private String name;
-    @NotNull
-    @NotBlank
-    @Email
-    private String email;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
+    Long id;
+    @Column(name = "name", nullable = false, length = 250)
+    String name;
+    @Column(name = "email", unique = true, length = 512)
+    String email;
 }

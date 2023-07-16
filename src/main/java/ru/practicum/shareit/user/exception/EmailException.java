@@ -5,3 +5,4 @@ public class EmailException extends RuntimeException {
         super(message);
     }
 }
+

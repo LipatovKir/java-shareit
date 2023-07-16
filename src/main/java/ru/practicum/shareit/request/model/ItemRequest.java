@@ -1,18 +1,19 @@
 package ru.practicum.shareit.request.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-@Setter
-@Getter
-@AllArgsConstructor
+@Data
+@Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ItemRequest {
 
-    private Long id;
+    @EqualsAndHashCode.Include
+    private long id;
     private String description;
-    private Long requestor;
-    private LocalDateTime created;
+    private long requestor;
+    private LocalDate created;
 }

@@ -4,27 +4,20 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.booking.dto.BookingShortDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ItemDto {
+public class CommentDto {
 
     Long id;
     @NotNull
     @NotBlank
-    String name;
-    @NotNull
-    @NotBlank
-    String description;
-    @NotNull
-    Boolean available;
-    BookingShortDto lastBooking;
-    BookingShortDto nextBooking;
-    List<CommentDto> comments;
+    String text;
+    LocalDateTime created;
+    String authorName;
 }

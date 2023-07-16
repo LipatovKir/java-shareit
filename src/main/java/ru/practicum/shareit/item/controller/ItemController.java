@@ -1,79 +1,67 @@
 package ru.practicum.shareit.item.controller;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.service.ItemMapper;
 import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.validation_label.Create;
-import ru.practicum.shareit.validation_label.Update;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.validation.Valid;
 import java.util.List;
 
+@Slf4j
 @Validated
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/items")
-
 public class ItemController {
 
-    public static final int VALID_ID = 1;
-    public static final String ERROR_ITEM_ID = "ID вещи не может быть NULL ";
-    public static final String ERROR_USER_ID = "ID пользователя не может быть NULL ";
     public static final String X_SHARER_USER = "X-Sharer-User-Id";
-
     private final ItemService itemService;
-    private final ItemMapper mapper;
-
-    public ItemController(ItemService itemService, ItemMapper mapper) {
-        this.itemService = itemService;
-        this.mapper = mapper;
-    }
 
     @PostMapping
-    public ItemDto createItem(@Validated({Create.class})
-                              @RequestBody ItemDto itemDto,
-                              @NotNull(message = (ERROR_ITEM_ID))
-                              @Min(VALID_ID)
-                              @RequestHeader(X_SHARER_USER) Long userId) {
-        Item item = mapper.makeModel(itemDto, userId);
-        return mapper.makeDto(itemService.createItem(item));
+    public ItemDto createItem(@RequestHeader(X_SHARER_USER) Long userId,
+                              @RequestBody
+                              @Valid ItemDto itemDto) {
+        log.info("Пользователь {} добавил новую вещь {}", userId, itemDto.getName());
+        return itemService.createItem(userId, itemDto);
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto updateItem(@Validated({Update.class})
+    public ItemDto updateItem(@RequestHeader(X_SHARER_USER) Long userId,
                               @RequestBody ItemDto itemDto,
-                              @NotNull(message = ERROR_ITEM_ID)
-                              @Min(VALID_ID)
-                              @PathVariable Long itemId,
-                              @NotNull(message = ERROR_USER_ID)
-                              @Min(VALID_ID)
-                              @RequestHeader(X_SHARER_USER) Long userId) {
-        Item item = mapper.makeModel(itemDto, userId);
-        item.setId(itemId);
-        return mapper.makeDto(itemService.updateItem(item));
+                              @PathVariable Long itemId) {
+        log.info("Пользователь {} обновил вещь {}", userId, itemDto.getName());
+        return itemService.updateItem(itemDto, itemId, userId);
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto findItemById(@NotNull(message = ERROR_ITEM_ID)
-                                @Min(VALID_ID)
-                                @PathVariable Long itemId) {
-        return mapper.makeDto(itemService.getItemById(itemId));
+    public ItemDto getItem(@RequestHeader(X_SHARER_USER) Long userId,
+                           @PathVariable Long itemId) {
+        log.info("Запрос получения вещи {}", itemId);
+        return itemService.getItemById(itemId, userId);
     }
 
     @GetMapping
-    public List<ItemDto> findAllItems(@NotNull(message = ERROR_USER_ID)
-                                      @Min(VALID_ID)
-                                      @RequestHeader(X_SHARER_USER) Long userId) {
-        List<Item> userItems = itemService.getAllItems(userId);
-        return mapper.makeItemListToItemDtoList(userItems);
+    public List<ItemDto> getAllItemsUser(@RequestHeader(X_SHARER_USER) Long userId) {
+        log.info("Список вещей пользователя {}", userId);
+        return itemService.getItemsUser(userId);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> findItemsByRequest(@RequestParam String text) {
-        List<Item> foundItems = itemService.getItemsByRequest(text);
-        return mapper.makeItemListToItemDtoList(foundItems);
+    public List<ItemDto> getSearchItem(String text) {
+        log.info("Поиск вещи по символу {}", text);
+        return itemService.searchItem(text);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@RequestHeader(X_SHARER_USER) Long userId,
+                                 @PathVariable Long itemId,
+                                 @RequestBody
+                                 @Valid CommentDto commentDto) {
+        log.info("Пользователь {} добавил комментарий к вещи {}", userId, itemId);
+        return itemService.createComment(userId, itemId, commentDto);
     }
 }

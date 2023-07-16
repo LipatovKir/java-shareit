@@ -1,27 +1,35 @@
 package ru.practicum.shareit.user.service;
 
-import org.springframework.stereotype.Service;
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@UtilityClass
 public class UserMapper {
 
-    public UserDto makeDto(User user) {
-        return new UserDto(user.getId(), user.getName(), user.getEmail());
+    public static UserDto makeUserInDto(User user) {
+        return UserDto.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .build();
     }
 
-    public User makeModel(UserDto userDto, Long userId) {
-        return new User(userId, userDto.getName(), userDto.getEmail());
+    public static User makeDtoInUser(UserDto userDto) {
+        return User.builder()
+                .id(userDto.getId())
+                .email(userDto.getEmail())
+                .name(userDto.getName())
+                .build();
     }
 
-    public List<UserDto> makeUserListToUserDtoList(List<User> users) {
+    public static List<UserDto> makeUserDtoList(Iterable<User> users) {
         List<UserDto> result = new ArrayList<>();
         for (User user : users) {
-            result.add(makeDto(user));
+            result.add(makeUserInDto(user));
         }
         return result;
     }
