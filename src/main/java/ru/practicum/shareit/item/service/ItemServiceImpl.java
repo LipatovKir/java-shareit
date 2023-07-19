@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.Booking;
@@ -15,6 +16,8 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.checkservice.CheckService;
@@ -38,6 +41,7 @@ public class ItemServiceImpl implements ItemService {
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
     private final CheckService checkService;
+    private final ItemRequestRepository itemRequestRepository;
 
     @Transactional
     @Override
@@ -46,6 +50,11 @@ public class ItemServiceImpl implements ItemService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("Пользователь не найден: " + userId));
         Item item = ItemMapper.makeDtoInItem(itemDto, user);
+        if (itemDto.getRequestId() != null) {
+            checkService.checkRequest(itemDto.getRequestId());
+            Optional<ItemRequest> request = itemRequestRepository.findById(itemDto.getRequestId());
+            request.ifPresent(item::setRequest);
+        }
         itemRepository.save(item);
         return ItemMapper.makeItemInDto(item);
     }
@@ -92,26 +101,24 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<ItemDto> getItemsUser(long userId) {
+    public List<ItemDto> getItemsUser(long userId, Integer from, Integer size) {
         checkService.checkUser(userId);
+        PageRequest pageRequest = checkService.checkPageSize(from, size);
         List<ItemDto> dtoItems = new ArrayList<>();
-        for (ItemDto itemDto : ItemMapper.makeItemDtoList(itemRepository.findByOwnerId(userId))) {
+        for (ItemDto itemDto : ItemMapper.makeItemDtoList(itemRepository.findByOwnerId(userId, pageRequest))) {
             Optional<Booking> lastBooking = bookingRepository.findFirstByItemIdAndStatusAndStartBeforeOrderByStartDesc(itemDto.getId(), BookingStatus.APPROVED, LocalDateTime.now());
             Optional<Booking> nextBooking = bookingRepository.findFirstByItemIdAndStatusAndStartAfterOrderByStartAsc(itemDto.getId(), BookingStatus.APPROVED, LocalDateTime.now());
-            if (lastBooking.isPresent()) {
-                itemDto.setLastBooking(BookingMapper.makeBookingShortDto(lastBooking.get()));
-            } else {
+            lastBooking.ifPresent(booking -> itemDto.setLastBooking(BookingMapper.makeBookingShortDto(booking)));
+            nextBooking.ifPresent(booking -> itemDto.setNextBooking(BookingMapper.makeBookingShortDto(booking)));
+            if (lastBooking.isEmpty()) {
                 itemDto.setLastBooking(null);
             }
-            if (nextBooking.isPresent()) {
-                itemDto.setNextBooking(BookingMapper.makeBookingShortDto(nextBooking.get()));
-            } else {
+            if (nextBooking.isEmpty()) {
                 itemDto.setNextBooking(null);
             }
             dtoItems.add(itemDto);
         }
         for (ItemDto itemDto : dtoItems) {
-
             List<Comment> commentList = commentRepository.findAllByItemId(itemDto.getId());
             createCommentDtoList(commentList, itemDto);
         }
@@ -120,11 +127,12 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<ItemDto> searchItem(String text) {
+    public List<ItemDto> searchItem(String text, Integer from, Integer size) {
+        PageRequest pageRequest = checkService.checkPageSize(from, size);
         if (text.equals("")) {
             return Collections.emptyList();
         } else {
-            return ItemMapper.makeItemDtoList(itemRepository.search(text));
+            return ItemMapper.makeItemDtoList(itemRepository.search(text, pageRequest));
         }
     }
 

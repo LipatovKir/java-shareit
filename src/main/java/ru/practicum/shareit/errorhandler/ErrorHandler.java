@@ -10,6 +10,7 @@ import ru.practicum.shareit.booking.exception.ValidationException;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
 import ru.practicum.shareit.item.exception.OwnerNotFoundException;
 import ru.practicum.shareit.item.exception.ValidationItemException;
+import ru.practicum.shareit.request.exception.RequestNotFoundException;
 import ru.practicum.shareit.user.exception.EmailException;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 
@@ -39,6 +40,12 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handle(BookingNotFoundException e) {
+        return new ErrorResponse(ERROR_NOT_FOUND, e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handle(RequestNotFoundException e) {
         return new ErrorResponse(ERROR_NOT_FOUND, e.getMessage());
     }
 

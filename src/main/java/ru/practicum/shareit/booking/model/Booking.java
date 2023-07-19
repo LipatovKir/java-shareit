@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @Table(name = "bookings")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
+
 public class Booking {
 
     @Id
@@ -37,3 +38,5 @@ public class Booking {
     @Column(name = "status", nullable = false)
     BookingStatus status;
 }
+
+
