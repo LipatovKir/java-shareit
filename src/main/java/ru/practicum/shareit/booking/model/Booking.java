@@ -59,5 +59,3 @@ public class Booking {
         return getClass().hashCode();
     }
 }
-
-

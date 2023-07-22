@@ -12,6 +12,8 @@ import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import javax.validation.Valid;
 import java.util.List;
 
+import static ru.practicum.shareit.constanta.Constanta.X_SHARER_USER;
+
 @Slf4j
 @Validated
 @RestController
@@ -19,7 +21,6 @@ import java.util.List;
 @RequestMapping(path = "/bookings")
 public class BookingController {
 
-    public static final String X_SHARER_USER = "X-Sharer-User-Id";
     private final BookingService bookingService;
 
     @PostMapping
@@ -63,4 +64,3 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.getBookingByOwner(userId, state, from, size));
     }
 }
-

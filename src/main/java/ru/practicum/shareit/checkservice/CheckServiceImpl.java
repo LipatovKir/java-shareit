@@ -64,4 +64,3 @@ public class CheckServiceImpl implements CheckService {
         return PageRequest.of(from / size, size);
     }
 }
-

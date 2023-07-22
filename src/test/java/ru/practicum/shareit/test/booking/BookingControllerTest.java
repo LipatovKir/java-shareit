@@ -168,5 +168,3 @@ class BookingControllerTest {
         verify(bookingService, times(1)).getBookingByOwner(1L, "ALL", 0, 10);
     }
 }
-
-

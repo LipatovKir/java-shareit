@@ -12,6 +12,8 @@ import ru.practicum.shareit.item.service.ItemService;
 import javax.validation.Valid;
 import java.util.List;
 
+import static ru.practicum.shareit.constanta.Constanta.X_SHARER_USER;
+
 @Slf4j
 @Validated
 @RestController
@@ -19,7 +21,6 @@ import java.util.List;
 @RequestMapping("/items")
 public class ItemController {
 
-    public static final String X_SHARER_USER = "X-Sharer-User-Id";
     private final ItemService itemService;
 
     @PostMapping

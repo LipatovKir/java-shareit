@@ -19,8 +19,3 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "like upper(concat('%', ?1, '%')) and i.available = true ")
     List<Item> search(String text, PageRequest pageRequest);
 }
-
-
-
-
-

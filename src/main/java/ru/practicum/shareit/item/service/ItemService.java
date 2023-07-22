@@ -19,12 +19,3 @@ public interface ItemService {
 
     CommentDto createComment(long userId, long itemId, CommentDto commentDto);
 }
-
-
-
-
-
-
-
-
-
