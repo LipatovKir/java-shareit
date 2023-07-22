@@ -1,4 +1,4 @@
-package ru.practicum.shareit.test.booking_test;
+package ru.practicum.shareit.test.booking;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;

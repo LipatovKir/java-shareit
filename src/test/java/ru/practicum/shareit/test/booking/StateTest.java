@@ -1,4 +1,4 @@
-package ru.practicum.shareit.test.booking_test;
+package ru.practicum.shareit.test.booking;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

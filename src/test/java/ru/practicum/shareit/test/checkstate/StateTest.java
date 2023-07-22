@@ -1,4 +1,4 @@
-package ru.practicum.shareit.test.check_state_test;
+package ru.practicum.shareit.test.checkstate;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
