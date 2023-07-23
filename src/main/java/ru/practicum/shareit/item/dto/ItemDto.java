@@ -8,6 +8,7 @@ import ru.practicum.shareit.booking.dto.BookingShortDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @Data
@@ -27,4 +28,6 @@ public class ItemDto {
     BookingShortDto lastBooking;
     BookingShortDto nextBooking;
     List<CommentDto> comments;
+    @Positive
+    private Long requestId;
 }
