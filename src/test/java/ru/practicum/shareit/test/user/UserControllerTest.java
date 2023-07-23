@@ -62,6 +62,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.email", is(firstUser.getEmail()), String.class));
         verify(userService, times(1)).createUser(firstUser);
     }
+
     @SneakyThrows
     @Test
     void updateUser() {
