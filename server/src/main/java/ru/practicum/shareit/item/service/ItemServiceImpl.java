@@ -24,10 +24,7 @@ import ru.practicum.shareit.checkservice.CheckService;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
