@@ -1,4 +1,4 @@
-package ru.practicum.shareit.booking.dto;
+package ru.practicum.shareit.booking.model_dto;
 
 import lombok.AccessLevel;
 import lombok.Builder;

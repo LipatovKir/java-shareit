@@ -12,7 +12,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
-import static ru.practicum.shareit.util.Constant.HEADER_USER;
+import static ru.practicum.shareit.constanta.Constant.X_SHARER_USER_ID;
 
 @Controller
 @RequestMapping(path = "/requests")
@@ -25,34 +25,33 @@ public class ItemRequestController {
     private final ItemRequestClient itemRequestClient;
 
     @PostMapping
-    public ResponseEntity<Object> addRequest(@RequestHeader(HEADER_USER) Long userId,
-                                             @RequestBody @Valid ItemRequestDto itemRequestDto) {
-
-        log.info("User {}, add new booking", userId);
-        return itemRequestClient.addRequest(userId, itemRequestDto);
+    public ResponseEntity<Object> createRequest(@RequestHeader(X_SHARER_USER_ID) Long userId,
+                                                @RequestBody
+                                                @Valid ItemRequestDto itemRequestDto) {
+        log.info("Пользователь {}, создал новый запрос ", userId);
+        return itemRequestClient.createRequest(userId, itemRequestDto);
     }
 
     @GetMapping
-    public ResponseEntity<Object> getRequests(@RequestHeader(HEADER_USER) Long userId) {
-
-        log.info("Get requests by user Id {}", userId);
+    public ResponseEntity<Object> getRequests(@RequestHeader(X_SHARER_USER_ID) Long userId) {
+        log.info("Получение запросов пользователя {} ", userId);
         return itemRequestClient.getRequests(userId);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllRequests(@RequestHeader(HEADER_USER) Long userId,
-                                                 @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                                 @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
-
-        log.info("Get all requests by All users ");
+    public ResponseEntity<Object> getAllRequests(@RequestHeader(X_SHARER_USER_ID) Long userId,
+                                                 @PositiveOrZero
+                                                 @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                 @Positive
+                                                 @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        log.info("Получение запросов всех пользователей приложения.");
         return itemRequestClient.getAllRequests(userId, from, size);
     }
 
     @GetMapping("/{requestId}")
-    public ResponseEntity<Object> getRequestById(@RequestHeader(HEADER_USER) Long userId,
+    public ResponseEntity<Object> getRequestById(@RequestHeader(X_SHARER_USER_ID) Long userId,
                                                  @PathVariable("requestId") Long requestId) {
-
-        log.info("Get request {}", requestId);
+        log.info("Получение запроса по номеру {} ", requestId);
         return itemRequestClient.getRequestById(userId, requestId);
     }
 }

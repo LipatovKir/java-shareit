@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.booking.dto.BookingShortDto;
+import ru.practicum.shareit.booking.model_dto.BookingShortDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -29,5 +29,5 @@ public class ItemDto {
     BookingShortDto nextBooking;
     List<CommentDto> comments;
     @Positive
-    private Long requestId;
+    Long requestId;
 }

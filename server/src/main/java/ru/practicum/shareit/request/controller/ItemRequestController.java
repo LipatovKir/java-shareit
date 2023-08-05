@@ -26,13 +26,13 @@ public class ItemRequestController {
     public ResponseEntity<ItemRequestDto> createItemRequest(@RequestHeader(X_SHARER_USER) Long userId,
                                                             @RequestBody
                                                             @Valid ItemRequestDto itemRequestDto) {
-        log.info("Пользователь {}, создал новый запрос", userId);
+        log.info("Пользователь {}, создал новый запрос ", userId);
         return ResponseEntity.ok(itemRequestService.createRequest(itemRequestDto, userId));
     }
 
     @GetMapping
     public ResponseEntity<List<ItemRequestDto>> getRequests(@RequestHeader(X_SHARER_USER) Long userId) {
-        log.info("Получение запросов пользователя {}", userId);
+        log.info("Получение запросов пользователя {} ", userId);
         return ResponseEntity.ok(itemRequestService.getRequests(userId));
     }
 
@@ -48,7 +48,7 @@ public class ItemRequestController {
     public ResponseEntity<ItemRequestDto> getRequestById(@RequestHeader(X_SHARER_USER) Long userId,
                                                          @PathVariable("requestId") Long requestId) {
 
-        log.info("Получение запроса по номеру {}", requestId);
+        log.info("Получение запроса по номеру {} ", requestId);
         return ResponseEntity.ok(itemRequestService.getRequestById(userId, requestId));
     }
 }

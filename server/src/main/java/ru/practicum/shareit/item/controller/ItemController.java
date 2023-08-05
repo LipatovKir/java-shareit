@@ -27,7 +27,7 @@ public class ItemController {
     public ResponseEntity<ItemDto> createItem(@RequestHeader(X_SHARER_USER) Long userId,
                                               @RequestBody
                                               @Valid ItemDto itemDto) {
-        log.info("Пользователь {} добавил новую вещь {}", userId, itemDto.getName());
+        log.info("Пользователь {} добавил новую вещь {} ", userId, itemDto.getName());
         return ResponseEntity.ok(itemService.createItem(userId, itemDto));
     }
 
@@ -35,14 +35,14 @@ public class ItemController {
     public ResponseEntity<ItemDto> updateItem(@RequestHeader(X_SHARER_USER) Long userId,
                                               @RequestBody ItemDto itemDto,
                                               @PathVariable Long itemId) {
-        log.info("Пользователь {} обновил вещь {}", userId, itemDto.getName());
+        log.info("Пользователь {} обновил вещь {} ", userId, itemDto.getName());
         return ResponseEntity.ok(itemService.updateItem(itemDto, itemId, userId));
     }
 
     @GetMapping("/{itemId}")
     public ResponseEntity<ItemDto> getItem(@RequestHeader(X_SHARER_USER) Long userId,
                                            @PathVariable Long itemId) {
-        log.info("Запрос получения вещи {}", itemId);
+        log.info("Запрос получения вещи {} ", itemId);
         return ResponseEntity.ok(itemService.getItemById(itemId, userId));
     }
 
@@ -50,7 +50,7 @@ public class ItemController {
     public ResponseEntity<List<ItemDto>> getAllItemsUser(@RequestHeader(X_SHARER_USER) Long userId,
                                                          @RequestParam(required = false, defaultValue = "0") Integer from,
                                                          @RequestParam(required = false, defaultValue = "10") Integer size) {
-        log.info("Список вещей пользователя {}", userId);
+        log.info("Список вещей пользователя {} ", userId);
         return ResponseEntity.ok(itemService.getItemsUser(userId, from, size));
     }
 
@@ -59,7 +59,7 @@ public class ItemController {
                                                        @RequestParam(required = false, defaultValue = "0") Integer from,
                                                        @RequestParam(required = false, defaultValue = "10") Integer size) {
 
-        log.info("Поиск вещи по символу {}", text);
+        log.info("Поиск вещи по символу {} ", text);
         return ResponseEntity.ok(itemService.searchItem(text, from, size));
     }
 
@@ -68,7 +68,7 @@ public class ItemController {
                                                  @PathVariable Long itemId,
                                                  @RequestBody
                                                  @Valid CommentDto commentDto) {
-        log.info("Пользователь {} добавил комментарий к вещи {}", userId, itemId);
+        log.info("Пользователь {} добавил комментарий к вещи {} ", userId, itemId);
         return ResponseEntity.ok(itemService.createComment(userId, itemId, commentDto));
     }
 }

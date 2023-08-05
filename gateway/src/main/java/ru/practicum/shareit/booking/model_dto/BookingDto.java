@@ -1,15 +1,13 @@
-package ru.practicum.shareit.booking.dto;
+package ru.practicum.shareit.booking.model_dto;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.booking.model.BookingStatus;
+import java.time.LocalDateTime;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
@@ -23,5 +21,4 @@ public class BookingDto {
     @NotNull
     @Future
     LocalDateTime end;
-    BookingStatus status;
 }
