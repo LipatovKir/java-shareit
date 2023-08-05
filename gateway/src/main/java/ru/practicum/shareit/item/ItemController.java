@@ -52,7 +52,7 @@ public class ItemController {
     @GetMapping
     public ResponseEntity<Object> getAllItemsUser(@RequestHeader(X_SHARER_USER_ID) Long userId,
                                                   @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                                  @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+                                                  @Positive @RequestParam(name = "size", defaultValue = "20") Integer size) {
 
         log.info("List items User {}", userId);
         return itemClient.getItemsUser(userId, from, size);

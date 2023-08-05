@@ -1,6 +1,7 @@
 package ru.practicum.shareit.request.model;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.proxy.HibernateProxy;
 import ru.practicum.shareit.user.model.User;
 
@@ -16,20 +17,21 @@ import java.util.Objects;
 @AllArgsConstructor
 @Entity
 @Table(name = "requests")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private Long id;
+    Long id;
     @Column(name = "description", nullable = false, length = 1200)
-    private String description;
+    String description;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester_id", nullable = false)
     @ToString.Exclude
-    private User requester;
+    User requester;
     @Column(name = "created", nullable = false)
-    private LocalDateTime created;
+    LocalDateTime created;
 
     @Override
     public final boolean equals(Object o) {

@@ -1,7 +1,9 @@
 package ru.practicum.shareit.request.dto;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.item.dto.ItemDto;
 
 import javax.validation.constraints.*;
@@ -10,12 +12,13 @@ import java.util.List;
 
 @Data
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemRequestDto {
 
-    private long id;
+    long id;
     @NotNull
     @NotBlank
-    private String description;
-    private LocalDateTime created;
-    private List<ItemDto> items;
+    String description;
+    LocalDateTime created;
+    List<ItemDto> items;
 }

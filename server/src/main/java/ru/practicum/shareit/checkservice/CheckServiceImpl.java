@@ -53,13 +53,13 @@ public class CheckServiceImpl implements CheckService {
     @Override
     public PageRequest checkPageSize(Integer from, Integer size) {
         if (from == 0 && size == 0) {
-            throw new ValidationException("\"size\" и \"from\" не может быть равно 0 ");
+            throw new ValidationException("size и from не может быть равно 0 ");
         }
         if (size <= 0) {
-            throw new ValidationException("\"size\" должен быть больше 0 ");
+            throw new ValidationException("size должен быть больше 0 ");
         }
         if (from < 0) {
-            throw new ValidationException("\"from\" должен быть больше или рано 0 ");
+            throw new ValidationException("from должен быть больше или рано 0 ");
         }
         return PageRequest.of(from / size, size);
     }
