@@ -12,7 +12,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
-import static ru.practicum.shareit.util.Constant.HEADER_USER;
+import static ru.practicum.shareit.constant.Constant.X_SHARER_USER_ID;
 
 @Controller
 @RequestMapping(path = "/requests")
@@ -25,7 +25,7 @@ public class ItemRequestController {
     private final ItemRequestClient itemRequestClient;
 
     @PostMapping
-    public ResponseEntity<Object> addRequest(@RequestHeader(HEADER_USER) Long userId,
+    public ResponseEntity<Object> addRequest(@RequestHeader(X_SHARER_USER_ID) Long userId,
                                              @RequestBody @Valid ItemRequestDto itemRequestDto) {
 
         log.info("User {}, add new booking", userId);
@@ -33,14 +33,14 @@ public class ItemRequestController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getRequests(@RequestHeader(HEADER_USER) Long userId) {
+    public ResponseEntity<Object> getRequests(@RequestHeader(X_SHARER_USER_ID) Long userId) {
 
         log.info("Get requests by user Id {}", userId);
         return itemRequestClient.getRequests(userId);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllRequests(@RequestHeader(HEADER_USER) Long userId,
+    public ResponseEntity<Object> getAllRequests(@RequestHeader(X_SHARER_USER_ID) Long userId,
                                                  @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                  @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
 
@@ -49,7 +49,7 @@ public class ItemRequestController {
     }
 
     @GetMapping("/{requestId}")
-    public ResponseEntity<Object> getRequestById(@RequestHeader(HEADER_USER) Long userId,
+    public ResponseEntity<Object> getRequestById(@RequestHeader(X_SHARER_USER_ID) Long userId,
                                                  @PathVariable("requestId") Long requestId) {
 
         log.info("Get request {}", requestId);

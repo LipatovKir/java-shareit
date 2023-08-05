@@ -20,7 +20,6 @@ import java.util.Objects;
 @Entity
 @Table(name = "bookings")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
 public class Booking {
 
     @Id

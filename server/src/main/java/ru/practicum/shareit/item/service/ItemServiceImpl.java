@@ -103,6 +103,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> getItemsUser(long userId, Integer from, Integer size) {
         checkService.checkUser(userId);
+
         PageRequest pageRequest = checkService.checkPageSize(from, size);
         List<ItemDto> dtoItems = new ArrayList<>();
         for (ItemDto itemDto : ItemMapper.makeItemDtoList(itemRepository.findByOwnerId(userId, pageRequest))) {
@@ -125,7 +126,7 @@ public class ItemServiceImpl implements ItemService {
         return dtoItems;
     }
 
-    @Transactional(readOnly = true)
+
     @Override
     public List<ItemDto> searchItem(String text, Integer from, Integer size) {
         PageRequest pageRequest = checkService.checkPageSize(from, size);

@@ -1,7 +1,9 @@
 package ru.practicum.shareit.booking.dto;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.booking.model.BookingStatus;
 
 import javax.validation.constraints.Future;
@@ -11,14 +13,15 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingDto {
 
-    private Long itemId;
+    Long itemId;
     @NotNull
     @FutureOrPresent
-    private LocalDateTime start;
+    LocalDateTime start;
     @NotNull
     @Future
-    private LocalDateTime end;
-    private BookingStatus status;
+    LocalDateTime end;
+    BookingStatus status;
 }

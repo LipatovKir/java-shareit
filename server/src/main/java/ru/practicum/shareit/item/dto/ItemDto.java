@@ -29,5 +29,5 @@ public class ItemDto {
     BookingShortDto nextBooking;
     List<CommentDto> comments;
     @Positive
-    private Long requestId;
+    Long requestId;
 }

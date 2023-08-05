@@ -57,10 +57,10 @@ public class BookingController {
 
     @GetMapping("/owner")
     public ResponseEntity<List<BookingResponseDto>> getBookingByOwner(@RequestHeader(X_SHARER_USER) Long userId,
-                                                                      @RequestParam(defaultValue = "ALL", required = false) String state,
+                                                                      @RequestParam(defaultValue = "ALL", required = false) String stateName,
                                                                       @RequestParam(defaultValue = "0", required = false) Integer from,
                                                                       @RequestParam(defaultValue = "10", required = false) Integer size) {
         log.info("Запрос всех бронирований {}", userId);
-        return ResponseEntity.ok(bookingService.getBookingByOwner(userId, state, from, size));
+        return ResponseEntity.ok(bookingService.getBookingByOwner(userId, stateName, from, size));
     }
 }
