@@ -56,6 +56,7 @@ public class ItemServiceImpl implements ItemService {
         return ItemMapper.makeItemInDto(item);
     }
 
+
     @Transactional
     @Override
     public ItemDto updateItem(ItemDto itemDto, long itemId, long userId) {
