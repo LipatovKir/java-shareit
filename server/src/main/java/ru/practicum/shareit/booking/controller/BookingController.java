@@ -27,7 +27,7 @@ public class BookingController {
     public ResponseEntity<BookingResponseDto> createBooking(@RequestHeader(X_SHARER_USER) Long userId,
                                                             @RequestBody
                                                             @Valid BookingDto bookingDto) {
-        log.info("Пользователь {},создал новое бронирование вещи {}", userId, bookingDto.getItemId());
+        log.info("Пользователь {},создал новое бронирование вещи {} ", userId, bookingDto.getItemId());
         return ResponseEntity.ok(bookingService.createBooking(bookingDto, userId));
     }
 
