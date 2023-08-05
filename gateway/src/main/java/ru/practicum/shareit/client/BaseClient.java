@@ -12,7 +12,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
-import static ru.practicum.shareit.constanta.Constant.X_SHARER_USER_ID;
+import static ru.practicum.shareit.constanta_new.Constant.X_SHARER_USER_ID;
 
 public class BaseClient {
     protected final RestTemplate rest;

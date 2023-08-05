@@ -9,13 +9,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.model_dto.BookingDto;
 import ru.practicum.shareit.booking.model_dto.State;
-import ru.practicum.shareit.errorhandler.UnsupportedStatusException;
+import ru.practicum.shareit.error_handler.UnsupportedStatusException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
-import static ru.practicum.shareit.constanta.Constant.X_SHARER_USER_ID;
+import static ru.practicum.shareit.constanta_new.Constant.X_SHARER_USER_ID;
 
 @Controller
 @RequestMapping(path = "/bookings")
