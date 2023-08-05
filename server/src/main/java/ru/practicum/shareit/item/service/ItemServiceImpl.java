@@ -104,8 +104,7 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> getItemsUser(long userId, Integer from, Integer size) {
         checkService.checkUser(userId);
         PageRequest pageRequest = checkService.checkPageSize(from, size);
-
-       List<ItemDto> dtoItems = new ArrayList<>();
+        List<ItemDto> dtoItems = new ArrayList<>();
         for (ItemDto itemDto : ItemMapper.makeItemDtoList(itemRepository.findByOwnerId(userId, pageRequest))) {
             Optional<Booking> lastBooking = bookingRepository.findFirstByItemIdAndStatusAndStartBeforeOrderByStartDesc(itemDto.getId(), BookingStatus.APPROVED, LocalDateTime.now());
             Optional<Booking> nextBooking = bookingRepository.findFirstByItemIdAndStatusAndStartAfterOrderByStartAsc(itemDto.getId(), BookingStatus.APPROVED, LocalDateTime.now());
