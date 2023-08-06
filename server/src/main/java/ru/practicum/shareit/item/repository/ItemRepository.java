@@ -9,14 +9,12 @@ import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-    @Query("select i from Item i where i.owner.id = :userId")
-    List<Item> findByOwnerId(long userId, PageRequest pageRequest);
+    List<Item> findByOwnerId(long userId);
 
     List<Item> findByRequestId(long requestId);
 
-    List<Item> findByOwnerById(long userId);
+    List<Item> findByOwnerIdOrderById(long userId, PageRequest pageRequest);
 
-    @Query("select i from Item i where upper(i.name) like upper(concat('%', ?1, '%')) or upper(i.description) " +
-            "like upper(concat('%', ?1, '%')) and i.available = true ")
+    @Query("select i from Item i where upper(i.name) like upper(concat('%', ?1, '%')) or upper(i.description) like upper(concat('%', ?1, '%')) and i.available = true ")
     List<Item> search(String text, PageRequest pageRequest);
 }
