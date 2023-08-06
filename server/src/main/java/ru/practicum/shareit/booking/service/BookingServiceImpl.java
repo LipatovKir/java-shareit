@@ -136,7 +136,7 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingResponseDto> getBookingByOwner(long userId, String state, Integer from, Integer size) {
         checkService.checkUser(userId);
         PageRequest pageRequest = checkService.checkPageSize(from, size);
-        if (itemRepository.findByOwnerId(userId).isEmpty()) {
+        if (itemRepository.findByOwnerId(userId, pageRequest).isEmpty()) {
             throw new ValidationException("У пользователя нет бронирований." + userId);
         }
         Page<Booking> bookings;

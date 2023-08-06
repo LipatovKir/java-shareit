@@ -13,7 +13,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
-import static ru.practicum.shareit.util.Constant.HEADER_USER;
+import static ru.practicum.shareit.constanta.Constant.X_SHARER_USER_ID;
 
 @Controller
 @RequestMapping(path = "/items")
@@ -25,54 +25,54 @@ public class ItemController {
     private final ItemClient itemClient;
 
     @PostMapping
-    public ResponseEntity<Object> addItem(@RequestHeader(HEADER_USER) Long userId,
-                                          @RequestBody @Valid ItemDto itemDto) {
-
-        log.info("User {}, add new item {}", userId, itemDto.getName());
-        return itemClient.addItem(userId, itemDto);
+    public ResponseEntity<Object> createItem(@RequestHeader(X_SHARER_USER_ID) Long userId,
+                                             @RequestBody
+                                             @Valid ItemDto itemDto) {
+        log.info("Пользователь {} добавил новую вещь {} ", userId, itemDto.getName());
+        return itemClient.createItem(userId, itemDto);
     }
 
     @PatchMapping("/{itemId}")
-    public ResponseEntity<Object> updateItem(@RequestHeader(HEADER_USER) Long userId,
+    public ResponseEntity<Object> updateItem(@RequestHeader(X_SHARER_USER_ID) Long userId,
                                              @RequestBody ItemDto itemDto,
                                              @PathVariable("itemId") Long itemId) {
-
-        log.info("User {}, update item {}", userId, itemDto.getName());
+        log.info("Пользователь {} обновил вещь {} ", userId, itemDto.getName());
         return itemClient.updateItem(userId, itemId, itemDto);
     }
 
     @GetMapping("/{itemId}")
-    public ResponseEntity<Object> getItem(@RequestHeader(HEADER_USER) Long userId,
+    public ResponseEntity<Object> getItem(@RequestHeader(X_SHARER_USER_ID) Long userId,
                                           @PathVariable("itemId") Long itemId) {
-
-        log.info("Get item {}", itemId);
+        log.info("Запрос получения вещи {} ", itemId);
         return itemClient.getItemById(itemId, userId);
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAllItemsUser(@RequestHeader(HEADER_USER) Long userId,
-                                                  @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                                  @Positive @RequestParam(name = "size", defaultValue = "20") Integer size) {
-
-        log.info("List items User {}", userId);
-        return itemClient.getItemsUser(userId, from, size);
+    public ResponseEntity<Object> getAllItemsUser(@RequestHeader(X_SHARER_USER_ID) Long userId,
+                                                  @PositiveOrZero
+                                                  @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                  @Positive
+                                                  @RequestParam(name = "size", defaultValue = "20") Integer size) {
+        log.info("Список вещей пользователя {} ", userId);
+        return itemClient.getAllItemsByOwnerId(userId, from, size);
     }
 
     @GetMapping("/search")
     public ResponseEntity<Object> getSearchItem(@RequestParam("text") String text,
-                                         @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                         @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
-
-        log.info("Get item with key substring {}", text);
+                                                @PositiveOrZero
+                                                @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                @Positive
+                                                @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        log.info("Поиск вещи по символу {} ", text);
         return itemClient.searchItem(text, from, size);
     }
 
     @PostMapping("/{itemId}/comment")
-    public ResponseEntity<Object> addComment(@RequestHeader(HEADER_USER) Long userId,
-                                             @PathVariable("itemId") Long itemId,
-                                             @RequestBody @Valid CommentDto commentDto) {
-
-        log.info("User {} add comment for Item {}", userId, itemId);
-        return itemClient.addComment(userId, itemId, commentDto);
+    public ResponseEntity<Object> createComment(@RequestHeader(X_SHARER_USER_ID) Long userId,
+                                                @PathVariable("itemId") Long itemId,
+                                                @RequestBody
+                                                @Valid CommentDto commentDto) {
+        log.info("Пользователь {} добавил комментарий к вещи {} ", userId, itemId);
+        return itemClient.createComment(userId, itemId, commentDto);
     }
 }

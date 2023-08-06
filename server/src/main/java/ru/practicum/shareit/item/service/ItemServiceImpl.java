@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
@@ -59,14 +60,15 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     @Override
-    public ItemDto updateItem(ItemDto itemDto, long itemId, long userId) {
+    public ItemDto updateItem(ItemDto itemDto, long itemId, long userId, Integer from, Integer size) {
         checkService.checkUser(userId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("Не найден пользователь " + userId));
         checkService.checkItem(itemId);
+        PageRequest pageRequest = checkService.checkPageSize(from, size);
         Item item = ItemMapper.makeDtoInItem(itemDto, user);
         item.setId(itemId);
-        if (!itemRepository.findByOwnerId(userId).contains(item)) {
+        if (!itemRepository.findByOwnerId(userId, pageRequest).contains(item)) {
             throw new ItemNotFoundException("Не найдена вещь пользователя " + userId);
         }
         Item newItem = itemRepository.findById(item.getId())
@@ -74,7 +76,7 @@ public class ItemServiceImpl implements ItemService {
         Optional.ofNullable(item.getName()).ifPresent(newItem::setName);
         Optional.ofNullable(item.getDescription()).ifPresent(newItem::setDescription);
         Optional.ofNullable(item.getAvailable()).ifPresent(newItem::setAvailable);
-        itemRepository.save(newItem);
+        itemRepository.saveAndFlush(newItem);
         return ItemMapper.makeItemInDto(newItem);
     }
 
@@ -87,8 +89,9 @@ public class ItemServiceImpl implements ItemService {
         ItemDto itemDto = ItemMapper.makeItemInDto(item);
         checkService.checkUser(userId);
         if (item.getOwner().getId() == userId) {
-            Optional<Booking> lastBooking = bookingRepository.findFirstByItemIdAndStatusAndStartBeforeOrderByStartDesc(itemId, BookingStatus.APPROVED, LocalDateTime.now());
             Optional<Booking> nextBooking = bookingRepository.findFirstByItemIdAndStatusAndStartAfterOrderByStartAsc(itemId, BookingStatus.APPROVED, LocalDateTime.now());
+            Optional<Booking> lastBooking = bookingRepository.findFirstByItemIdAndStatusAndStartBeforeOrderByStartDesc(itemId, BookingStatus.APPROVED, LocalDateTime.now());
+
             itemDto.setLastBooking(lastBooking.map(BookingMapper::makeBookingShortDto).orElse(null));
             itemDto.setNextBooking(nextBooking.map(BookingMapper::makeBookingShortDto).orElse(null));
         }
@@ -97,11 +100,11 @@ public class ItemServiceImpl implements ItemService {
         return itemDto;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
-    public List<ItemDto> getItemsUser(long userId, Integer from, Integer size) {
+    public List<ItemDto> getAllItemsByOwnerId(long userId, Integer from, Integer size) {
         checkService.checkUser(userId);
-        PageRequest pageRequest = PageRequest.of(from / size, size);
+        PageRequest pageRequest = checkService.checkPageSize(from, size);
         List<ItemDto> dtoItems = new ArrayList<>();
         for (ItemDto itemDto : ItemMapper.makeItemDtoList(itemRepository.findByOwnerId(userId, pageRequest))) {
             Optional<Booking> lastBooking = bookingRepository.findFirstByItemIdAndStatusAndStartBeforeOrderByStartDesc(itemDto.getId(), BookingStatus.APPROVED, LocalDateTime.now());
@@ -120,6 +123,7 @@ public class ItemServiceImpl implements ItemService {
             List<Comment> commentList = commentRepository.findAllByItemId(itemDto.getId());
             createCommentDtoList(commentList, itemDto);
         }
+        dtoItems.sort(Comparator.comparing(ItemDto::getId));
         return dtoItems;
     }
 
@@ -153,7 +157,7 @@ public class ItemServiceImpl implements ItemService {
         return CommentMapper.makeCommentInDto(comment);
     }
 
-    private void createCommentDtoList(List<Comment> commentList, ItemDto itemDto) {
+    private void createCommentDtoList(@NotNull List<Comment> commentList, ItemDto itemDto) {
         if (!commentList.isEmpty()) {
             itemDto.setComments(CommentMapper.makeCommentDtoList(commentList));
         } else {

@@ -9,7 +9,6 @@ import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 
-import javax.validation.Valid;
 import java.util.List;
 
 import static ru.practicum.shareit.constanta.Constanta.X_SHARER_USER;
@@ -25,9 +24,8 @@ public class BookingController {
 
     @PostMapping
     public ResponseEntity<BookingResponseDto> createBooking(@RequestHeader(X_SHARER_USER) Long userId,
-                                                            @RequestBody
-                                                            @Valid BookingDto bookingDto) {
-        log.info("Пользователь {},создал новое бронирование вещи {}", userId, bookingDto.getItemId());
+                                                            @RequestBody BookingDto bookingDto) {
+        log.info("Пользователь {},создал новое бронирование вещи {} ", userId, bookingDto.getItemId());
         return ResponseEntity.ok(bookingService.createBooking(bookingDto, userId));
     }
 
@@ -35,14 +33,14 @@ public class BookingController {
     public ResponseEntity<BookingResponseDto> updateBooking(@RequestHeader(X_SHARER_USER) Long userId,
                                                             @PathVariable Long bookingId,
                                                             @RequestParam Boolean approved) {
-        log.info("Пользователь {} изменил статус бронирования {}", userId, bookingId);
+        log.info("Пользователь {} изменил статус бронирования {} ", userId, bookingId);
         return ResponseEntity.ok(bookingService.updateBooking(userId, bookingId, approved));
     }
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<BookingResponseDto> getBookingById(@RequestHeader(X_SHARER_USER) Long userId,
                                                              @PathVariable Long bookingId) {
-        log.info("Запрос бронирования {}", bookingId);
+        log.info("Запрос бронирования {} ", bookingId);
         return ResponseEntity.ok(bookingService.getBookingById(userId, bookingId));
     }
 
@@ -51,7 +49,7 @@ public class BookingController {
                                                                        @RequestParam(defaultValue = "ALL", required = false) String state,
                                                                        @RequestParam(defaultValue = "0", required = false) Integer from,
                                                                        @RequestParam(defaultValue = "10", required = false) Integer size) {
-        log.info("Запрос всех бронирований {}", userId);
+        log.info("Запрос всех бронирований {} ", userId);
         return ResponseEntity.ok(bookingService.getBookingByBooker(userId, state, from, size));
     }
 
@@ -60,7 +58,7 @@ public class BookingController {
                                                                       @RequestParam(defaultValue = "ALL", required = false) String state,
                                                                       @RequestParam(defaultValue = "0", required = false) Integer from,
                                                                       @RequestParam(defaultValue = "10", required = false) Integer size) {
-        log.info("Запрос всех бронирований {}", userId);
+        log.info("Запрос всех бронирований {} ", userId);
         return ResponseEntity.ok(bookingService.getBookingByOwner(userId, state, from, size));
     }
 }

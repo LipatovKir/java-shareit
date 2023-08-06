@@ -8,7 +8,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.dto.BookingState;
+import ru.practicum.shareit.booking.dto.State;
 import ru.practicum.shareit.client.BaseClient;
 
 import java.util.Map;
@@ -27,11 +27,11 @@ public class BookingClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> addBooking(Long userId, BookingDto requestDto) {
+    public ResponseEntity<Object> createBooking(Long userId, BookingDto requestDto) {
         return post("", userId, requestDto);
     }
 
-    public ResponseEntity<Object> approveBooking(Long userId, Long bookingId, Boolean approved) {
+    public ResponseEntity<Object> updateBooking(Long userId, Long bookingId, Boolean approved) {
         Map<String, Object> parameters = Map.of(
                 "approved", approved
         );
@@ -42,7 +42,7 @@ public class BookingClient extends BaseClient {
         return get("/" + bookingId, userId);
     }
 
-    public ResponseEntity<Object> getAllBookingsByBookerId(Long userId, BookingState state, Integer from, Integer size) {
+    public ResponseEntity<Object> getAllBookingsByBookerId(Long userId, State state, Integer from, Integer size) {
         Map<String, Object> parameters = Map.of(
                 "state", state.name(),
                 "from", from,
@@ -51,7 +51,7 @@ public class BookingClient extends BaseClient {
         return get("?state={state}&from={from}&size={size}", userId, parameters);
     }
 
-    public ResponseEntity<Object> getAllBookingsForAllItemsByOwnerId(Long userId, BookingState state, Integer from, Integer size) {
+    public ResponseEntity<Object> getAllBookingsForAllItemsByOwnerId(Long userId, State state, Integer from, Integer size) {
         Map<String, Object> parameters = Map.of(
                 "state", state.name(),
                 "from", from,

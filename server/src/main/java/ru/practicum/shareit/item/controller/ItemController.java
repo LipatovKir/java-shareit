@@ -9,7 +9,6 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 import static ru.practicum.shareit.constanta.Constanta.X_SHARER_USER;
@@ -25,24 +24,25 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<ItemDto> createItem(@RequestHeader(X_SHARER_USER) Long userId,
-                                              @RequestBody
-                                              @Valid ItemDto itemDto) {
-        log.info("Пользователь {} добавил новую вещь {}", userId, itemDto.getName());
+                                              @RequestBody ItemDto itemDto) {
+        log.info("Пользователь {} добавил новую вещь {} ", userId, itemDto.getName());
         return ResponseEntity.ok(itemService.createItem(userId, itemDto));
     }
 
     @PatchMapping("/{itemId}")
     public ResponseEntity<ItemDto> updateItem(@RequestHeader(X_SHARER_USER) Long userId,
                                               @RequestBody ItemDto itemDto,
-                                              @PathVariable Long itemId) {
-        log.info("Пользователь {} обновил вещь {}", userId, itemDto.getName());
-        return ResponseEntity.ok(itemService.updateItem(itemDto, itemId, userId));
+                                              @PathVariable Long itemId,
+                                              @RequestParam(required = false, defaultValue = "0") Integer from,
+                                              @RequestParam(required = false, defaultValue = "10") Integer size) {
+        log.info("Пользователь {} обновил вещь {} ", userId, itemDto.getName());
+        return ResponseEntity.ok(itemService.updateItem(itemDto, itemId, userId, from, size));
     }
 
     @GetMapping("/{itemId}")
     public ResponseEntity<ItemDto> getItem(@RequestHeader(X_SHARER_USER) Long userId,
                                            @PathVariable Long itemId) {
-        log.info("Запрос получения вещи {}", itemId);
+        log.info("Запрос получения вещи {} ", itemId);
         return ResponseEntity.ok(itemService.getItemById(itemId, userId));
     }
 
@@ -50,8 +50,8 @@ public class ItemController {
     public ResponseEntity<List<ItemDto>> getAllItemsUser(@RequestHeader(X_SHARER_USER) Long userId,
                                                          @RequestParam(required = false, defaultValue = "0") Integer from,
                                                          @RequestParam(required = false, defaultValue = "10") Integer size) {
-        log.info("Список вещей пользователя {}", userId);
-        return ResponseEntity.ok(itemService.getItemsUser(userId, from, size));
+        log.info("Список вещей пользователя {} ", userId);
+        return ResponseEntity.ok(itemService.getAllItemsByOwnerId(userId, from, size));
     }
 
     @GetMapping("/search")
@@ -59,16 +59,15 @@ public class ItemController {
                                                        @RequestParam(required = false, defaultValue = "0") Integer from,
                                                        @RequestParam(required = false, defaultValue = "10") Integer size) {
 
-        log.info("Поиск вещи по символу {}", text);
+        log.info("Поиск вещи по символу {} ", text);
         return ResponseEntity.ok(itemService.searchItem(text, from, size));
     }
 
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<CommentDto> addComment(@RequestHeader(X_SHARER_USER) Long userId,
                                                  @PathVariable Long itemId,
-                                                 @RequestBody
-                                                 @Valid CommentDto commentDto) {
-        log.info("Пользователь {} добавил комментарий к вещи {}", userId, itemId);
+                                                 @RequestBody CommentDto commentDto) {
+        log.info("Пользователь {} добавил комментарий к вещи {} ", userId, itemId);
         return ResponseEntity.ok(itemService.createComment(userId, itemId, commentDto));
     }
 }

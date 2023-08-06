@@ -1,12 +1,15 @@
 package ru.practicum.shareit.errorhandler;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ErrorResponse {
 
-    private final String error;
-    private final String description;
+    final String error;
+    final String description;
 }

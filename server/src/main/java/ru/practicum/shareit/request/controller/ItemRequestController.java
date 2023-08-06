@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 import static ru.practicum.shareit.constanta.Constanta.X_SHARER_USER;
@@ -24,8 +23,7 @@ public class ItemRequestController {
 
     @PostMapping
     public ResponseEntity<ItemRequestDto> createItemRequest(@RequestHeader(X_SHARER_USER) Long userId,
-                                                            @RequestBody
-                                                            @Valid ItemRequestDto itemRequestDto) {
+                                                            @RequestBody ItemRequestDto itemRequestDto) {
         log.info("Пользователь {}, создал новый запрос", userId);
         return ResponseEntity.ok(itemRequestService.createRequest(itemRequestDto, userId));
     }

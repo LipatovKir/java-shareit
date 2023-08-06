@@ -20,39 +20,34 @@ public class UserController {
     private final UserClient userClient;
 
     @PostMapping
-    public ResponseEntity<Object> addUser(@RequestBody @Valid UserDto userDto) {
-
-        log.info("Add User {} ", userDto.getId());
-        return userClient.addUser(userDto);
+    public ResponseEntity<Object> createUser(@RequestBody
+                                             @Valid UserDto userDto) {
+        log.info("Добавлен пользователь {} ", userDto.getId());
+        return userClient.createUser(userDto);
     }
 
     @PatchMapping("/{userId}")
-    public ResponseEntity<Object> updateUser(@PathVariable Long userId, @RequestBody UserDto userDto) {
-
-        log.info("Update User {} ", userDto.getId());
+    public ResponseEntity<Object> updateUser(@PathVariable Long userId,
+                                             @RequestBody UserDto userDto) {
+        log.info("Обновлены данные пользователя {} ", userDto.getId());
         return userClient.updateUser(userId, userDto);
     }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Object> deleteUser(@PathVariable Long userId) {
-
-        log.info("User {} deleted ", userId);
+        log.info("Пользователь {} удален ", userId);
         return userClient.deleteUser(userId);
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<Object> getUser(@PathVariable Long userId) {
-
-        log.info("Get User {} ", userId);
+        log.info("Запрос получения пользователя {} ", userId);
         return userClient.getUser(userId);
     }
 
     @GetMapping
     public ResponseEntity<Object> getAllUsers() {
-
-        log.info("List all Users");
+        log.info("Запрос списка всех пользователей. ");
         return userClient.getAllUsers();
     }
-
-
 }
