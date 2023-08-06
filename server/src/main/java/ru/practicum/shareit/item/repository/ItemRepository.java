@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-    @Query("select i from Item i where i.owner.id = :userId order by i.id")
+    @Query("select i from Item i where i.owner.id = :userId")
     List<Item> findByOwnerId(long userId, PageRequest pageRequest);
 
     List<Item> findByRequestId(long requestId);
