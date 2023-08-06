@@ -105,6 +105,15 @@
             <artifactId>spring-boot-jpastreamer-autoconfigure</artifactId>
             <version>${speedment.jpastreamer.integration.spring.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test-autoconfigure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

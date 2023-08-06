@@ -65,10 +65,9 @@ public class ItemServiceImpl implements ItemService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("Не найден пользователь " + userId));
         checkService.checkItem(itemId);
-        PageRequest pageRequest = checkService.checkPageSize(from, size);
         Item item = ItemMapper.makeDtoInItem(itemDto, user);
         item.setId(itemId);
-        if (!itemRepository.findByOwnerId(userId, pageRequest).contains(item)) {
+        if (!itemRepository.findByOwnerId(userId).contains(item)) {
             throw new ItemNotFoundException("Не найдена вещь пользователя " + userId);
         }
         Item newItem = itemRepository.findById(item.getId())
@@ -106,7 +105,7 @@ public class ItemServiceImpl implements ItemService {
         checkService.checkUser(userId);
         PageRequest pageRequest = checkService.checkPageSize(from, size);
         List<ItemDto> dtoItems = new ArrayList<>();
-        for (ItemDto itemDto : ItemMapper.makeItemDtoList(itemRepository.findByOwnerId(userId, pageRequest))) {
+        for (ItemDto itemDto : ItemMapper.makeItemDtoList(itemRepository.findByOwnerIdOrderById(userId, pageRequest))) {
             Optional<Booking> lastBooking = bookingRepository.findFirstByItemIdAndStatusAndStartBeforeOrderByStartDesc(itemDto.getId(), BookingStatus.APPROVED, LocalDateTime.now());
             Optional<Booking> nextBooking = bookingRepository.findFirstByItemIdAndStatusAndStartAfterOrderByStartAsc(itemDto.getId(), BookingStatus.APPROVED, LocalDateTime.now());
             lastBooking.ifPresent(booking -> itemDto.setLastBooking(BookingMapper.makeBookingShortDto(booking)));
