@@ -34,8 +34,4 @@ services:
       - POSTGRES_DB=shareit
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
-<<<<<<< HEAD
       - TZ=Europe/Moscow
-=======
-  #    - TZ=Europe/Moscow
->>>>>>> 98b6c90757b43693adc0871c81a57887cbdf4c46
