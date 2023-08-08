@@ -54,6 +54,12 @@
                 <artifactId>jsoup</artifactId>
                 <version>${jsoup.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring.version}</version>
+                <scope>compile</scope>
+            </dependency>
 
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -76,10 +82,6 @@
                 <groupId>com.speedment.jpastreamer</groupId>
                 <artifactId>jpastreamer-core</artifactId>
                 <version>${speedment.jpastreamer.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-test</artifactId>
             </dependency>
         </dependencies>
     </dependencyManagement>
